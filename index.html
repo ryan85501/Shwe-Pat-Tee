@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src='//libtl.com/sdk.js' data-zone='9748985' data-sdk='show_9748985'></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lottery Numbers</title>
@@ -219,13 +218,27 @@
 
     </div>
 
+    <!-- Ad script to load the ad network SDK -->
+    <script src='//libtl.com/sdk.js' data-zone='9748985' data-sdk='show_9748985'></script>
+
     <script>
+        // The ad configuration, to be called when a button is clicked
+        const adConfig = {
+            type: 'inApp',
+            inAppSettings: {
+                frequency: 2,
+                capping: 0.1,
+                interval: 30,
+                timeout: 5,
+                everyPage: false
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
 
             // History data structure to store results.
             let history = [
             
-                { date: '21-08-2025', day: 'Wednesday', am: '04', pm: '--' },
                 { date: '20-08-2025', day: 'Wednesday', am: '27', pm: '37' },
                 { date: '19-08-2025', day: 'Tuesday', am: '57', pm: '60' },
                 { date: '18-08-2025', day: 'Monday', am: '05', pm: '19' }
@@ -264,7 +277,7 @@
                 });
             }
 
-            // Handle button clicks to show/hide content
+            // Handle button clicks to show/hide content and show ad
             const buttons = document.querySelectorAll('.title-button');
             const contentContainers = document.querySelectorAll('.numbers-container');
             
@@ -282,6 +295,13 @@
                             container.classList.remove('active');
                         });
                         targetElement.classList.add('active');
+
+                        // Show the ad right after the new container is displayed
+                        if (typeof show_9748985 === 'function') {
+                            show_9748985(adConfig);
+                        } else {
+                            console.error("Ad script not loaded or function not found.");
+                        }
                     }
                 });
             });
@@ -293,5 +313,4 @@
 
 </body>
 </html>
-
 
