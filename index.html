@@ -29,15 +29,6 @@
             gap: 20px;
         }
 
-        /* Live display section */
-        .live-display-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            text-align: center;
-            width: 100%;
-        }
-
         /* Header Section for Date and All Day text */
         .header-section {
             font-size: 24px;
@@ -47,54 +38,6 @@
         .header-section div:first-child {
             font-weight: bold;
             font-size: 30px;
-        }
-
-        /* 2D Live Result Section styling */
-        .live-result-section {
-            background-color: #404d5b;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .live-result-header {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: left;
-            margin-bottom: 10px;
-            border-bottom: 2px solid #5a6b7c;
-            padding-bottom: 5px;
-        }
-
-        .result-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .result-label {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        
-        .result-value {
-            font-size: 24px;
-            color: #ffcc00;
-        }
-
-        .result-large-number {
-            font-size: 72px;
-            font-weight: bold;
-            color: #ff6347;
-            text-align: center;
-            animation: bounceIn 1s ease-in-out;
-        }
-
-        @keyframes bounceIn {
-            0%   { transform: scale(0.1); opacity: 0; }
-            60%  { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(1); }
         }
 
         /* Styling for the new button titles */
@@ -149,6 +92,7 @@
             justify-content: center;
             gap: 25px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            color: #FFD700; /* Added gold color here */
         }
         
         .sub-number {
@@ -223,23 +167,6 @@
             <div>တစ်နေကုန်စာ</div>
         </div>
 
-        <!-- 2D Live Result Section -->
-        <div class="live-result-section">
-            <div class="live-result-header">2D Live Result &#x21BB;</div>
-            <div class="result-row">
-                <span class="result-label">Set</span>
-                <span class="result-value" id="set-value">...</span>
-            </div>
-            <div class="result-row">
-                <span class="result-label">Value</span>
-                <span class="result-value" id="vale-value">...</span>
-            </div>
-            <div class="result-row">
-                <span class="result-label">Result</span>
-            </div>
-            <div class="result-large-number" id="result-number">...</div>
-        </div>
-
         <!-- Buttons to show/hide content -->
         <button class="title-button" data-target="shwe-pat-tee">ရွှေပတ်သီး</button>
         <div id="shwe-pat-tee" class="numbers-container">
@@ -302,12 +229,6 @@
                 { date: '18-08-2025', day: 'Monday', am: '05', pm: '19' }
             ];
 
-            // Flags to ensure we only save the result once for each scheduled time.
-            let resultSavedForAM = false;
-            let resultSavedForPM = false;
-            let lastDateChecked = new Date().toDateString();
-
-
             // Function to format the current date
             function formatDate(date) {
                 const day = date.getDate().toString().padStart(2, '0');
@@ -325,96 +246,7 @@
             updateCurrentDate(); // Initial update
 
             // Get the HTML elements to update
-            const setElement = document.getElementById('set-value');
-            const valeElement = document.getElementById('vale-value');
-            const resultElement = document.getElementById('result-number');
             const historyTableBody = document.getElementById('history-table-body');
-            
-            // --- LIVE DATA INTEGRATION ---
-            // This URL points to the Flask server you are running locally.
-            const API_ENDPOINT = 'http://127.0.0.1:5000/get_set_data';
-            
-            async function fetchThaiMarketData() {
-                try {
-                    // Check if a new day has started and reset the flags
-                    const today = new Date().toDateString();
-                    if (today !== lastDateChecked) {
-                        resultSavedForAM = false;
-                        resultSavedForPM = false;
-                        lastDateChecked = today;
-                    }
-
-                    // Fetch data from the local Flask server
-                    const response = await fetch(API_ENDPOINT);
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    
-                    const data = await response.json();
-
-                    // Log the raw data to the console for debugging
-                    console.log("Data received from Python server:", data);
-                    
-                    // Retrieve Set and Value data
-                    const newSet = data.set; 
-                    const newVale = data.value;
-
-                    // New logic for the result number based on your request:
-                    // First digit is the last number from Set.
-                    const firstDigit = String(newSet).slice(-1);
-                    
-                    // Clean the value string to only include numbers, commas, and dots for display
-                    const displayVale = String(newVale).replace(/[^0-9.,]/g, '');
-
-                    // Clean the value string by removing commas for calculation
-                    const cleanedVale = displayVale.replace(/,/g, '');
-                    const valeNumber = parseFloat(cleanedVale);
-                    
-                    let secondDigit;
-                    let newResult;
-
-                    // Check if valeNumber is a valid number before calculating the second digit
-                    if (!isNaN(valeNumber)) {
-                        // Extract the last digit of the integer part.
-                        secondDigit = Math.floor(valeNumber % 10);
-                        // Combine the two digits into a string.
-                        newResult = `${firstDigit}${secondDigit}`;
-                    } else {
-                        // If the value is not a valid number, show an error
-                        newResult = 'Error';
-                    }
-
-                    // Update the HTML elements
-                    setElement.textContent = newSet;
-                    valeElement.textContent = displayVale;
-                    resultElement.textContent = newResult;
-
-                    // Check for scheduled result capture and update history
-                    const now = new Date();
-                    const currentHour = now.getHours();
-                    const currentMinute = now.getMinutes();
-
-                    // 12:01 PM check
-                    if (currentHour === 12 && currentMinute === 1 && !resultSavedForAM) {
-                        addResultToHistory(newResult, 'AM');
-                        resultSavedForAM = true;
-                    }
-
-                    // 4:30 PM check
-                    if (currentHour === 16 && currentMinute === 30 && !resultSavedForPM) {
-                        addResultToHistory(newResult, 'PM');
-                        resultSavedForPM = true;
-                    }
-
-
-                } catch (error) {
-                    console.error("Failed to fetch Thai market data:", error);
-                    setElement.textContent = 'Error';
-                    valeElement.textContent = 'Error';
-                    resultElement.textContent = 'Error';
-                }
-            }
 
             // Function to dynamically update the history table
             function updateHistoryTable() {
@@ -428,41 +260,6 @@
                     `;
                     historyTableBody.appendChild(row);
                 });
-            }
-
-            // Function to add a new result to the history
-            function addResultToHistory(result, timeOfDay) {
-                const now = new Date();
-                const formattedDate = formatDate(now);
-                const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' });
-
-                // Find if there's an entry for the current date
-                let todayEntry = history.find(entry => entry.date === formattedDate);
-
-                if (todayEntry) {
-                    // Update existing entry
-                    if (timeOfDay === 'AM') {
-                        todayEntry.am = result;
-                    } else {
-                        todayEntry.pm = result;
-                    }
-                } else {
-                    // Create a new entry and add it to the top of the history
-                    const newEntry = {
-                        date: formattedDate,
-                        day: dayOfWeek,
-                        am: timeOfDay === 'AM' ? result : '--',
-                        pm: timeOfDay === 'PM' ? result : '--'
-                    };
-                    history.unshift(newEntry);
-                }
-                
-                // Keep the history list to a maximum of 5 entries
-                if (history.length > 5) {
-                    history.pop();
-                }
-
-                updateHistoryTable();
             }
 
             // Handle button clicks to show/hide content
@@ -487,17 +284,10 @@
                 });
             });
 
-            // Start the data fetching and history display loop
+            // Start the history display loop
             updateHistoryTable();
-            fetchThaiMarketData(); // Initial data load
-            setInterval(fetchThaiMarketData, 1000); // Update every 1 second
-            
-            // Note: The animateRandomNumber function was removed as it's not a common
-            // behavior for this type of application and can be distracting.
-            // If you would like it back, please let me know.
         });
     </script>
 
 </body>
 </html>
-
