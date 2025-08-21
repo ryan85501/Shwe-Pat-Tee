@@ -5,44 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lottery Numbers</title>
     <style>
-        /* General body styling for a centered layout */
+        /* General body styling for a centered, single-column layout */
         body {
             font-family: 'Comic Sans MS', 'Verdana', sans-serif;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            padding-top: 50px;
-            height: 100vh;
+            align-items: center;
+            padding: 20px;
             margin: 0;
-            /* Static background color with no text */
             background-color: #2c3e50;
             color: #ffffff;
+            min-height: 100vh;
+            box-sizing: border-box; /* Ensures padding doesn't add to total width/height */
         }
 
-        /* Main container for the lottery content and history side-by-side */
+        /* Main container for all lottery content in a single column */
         .main-container {
             display: flex;
-            flex-direction: row;
-            gap: 50px;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px; /* Max width for better readability on large screens */
+            gap: 20px;
         }
 
-        /* Container for the live animated display */
+        /* Live display section */
         .live-display-container {
             display: flex;
             flex-direction: column;
             gap: 20px;
             text-align: center;
-            width: 650px; /* Increased width to fit the new column */
-            background-color: transparent;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
         }
 
-        /* Section for the date and "all day" text */
+        /* Header Section for Date and All Day text */
         .header-section {
             font-size: 24px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .header-section div:first-child {
@@ -50,7 +49,7 @@
             font-size: 30px;
         }
 
-        /* New styles for the 2D Live Result section */
+        /* 2D Live Result Section styling */
         .live-result-section {
             background-color: #404d5b;
             padding: 20px;
@@ -93,64 +92,65 @@
         }
 
         @keyframes bounceIn {
-            0% { transform: scale(0.1); opacity: 0; }
-            60% { transform: scale(1.2); opacity: 1; }
+            0%   { transform: scale(0.1); opacity: 0; }
+            60%  { transform: scale(1.2); opacity: 1; }
             100% { transform: scale(1); }
         }
 
-        /* Container for the main two-column layout */
-        .content-columns {
-            display: flex;
-            justify-content: space-around;
-            gap: 40px;
-        }
-
-        /* Styling for each individual column */
-        .column {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Styling for the titles */
-        .title {
+        /* Styling for the new button titles */
+        .title-button {
+            width: 100%;
+            background-color: #34495e;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
             font-size: 28px;
             font-weight: bold;
-            margin-bottom: 10px;
-            white-space: nowrap;
-        }
-
-        /* Styling for the numbers in the main section */
-        .main-numbers {
-            font-size: 72px; /* Increased font size */
-            font-weight: bold;
-            color: #ffcc00; /* A light gold color for visibility */
-            white-space: nowrap;
-            /* Animation for flashing effect */
-            animation: flash-color-change 2s infinite linear;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
         
-        /* Keyframe animation for main numbers to flash and change color */
-        @keyframes flash-color-change {
-            0%   { color: #ffcc00; transform: scale(1.0); }
-            25%  { color: #ff6347; transform: 1.1; }
-            50%  { color: #40e0d0; transform: scale(1.0); }
-            75%  { color: #87ceeb; transform: scale(1.1); }
-            100% { color: #ffcc00; transform: scale(1.0); }
+        .title-button:hover {
+            background-color: #5d6d7e;
         }
 
-        /* Styling for the numbers in the bottom section */
+        .title-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Container for the numbers that will be shown/hidden */
+        .numbers-container {
+            width: 100%;
+            display: none; /* Initially hidden */
+            margin-top: -10px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #404d5b;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .numbers-container.active {
+            display: block; /* Show when active */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Styling for the numbers inside the containers */
         .sub-numbers {
-            font-size: 48px; /* Increased font size */
+            font-size: 48px;
             font-weight: bold;
-            margin-top: 5px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 25px; /* Add spacing between the sub-numbers */
+            gap: 25px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-
+        
         .sub-number {
             opacity: 0;
             transform: scale(0.5);
@@ -162,15 +162,15 @@
             transform: scale(1);
         }
 
-        /* --- New styles for the History section --- */
+        /* 2D Results History Section */
         .history-container {
             background-color: transparent;
-            padding: 20px 30px;
+            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            width: 450px;
+            width: 100%;
             text-align: left;
-            color: #ffffff; /* White text for better contrast */
+            color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         .history-header {
@@ -189,13 +189,10 @@
 
         .history-table th, .history-table td {
             padding: 10px 0;
+            border-bottom: 1px solid #5a6b7c;
         }
 
-        .history-table tbody tr {
-            border-bottom: 1px solid #ddd;
-        }
-
-        .history-table tbody tr:last-child {
+        .history-table tbody tr:last-child td {
             border-bottom: none;
         }
 
@@ -208,8 +205,8 @@
             margin: 0 5px;
         }
 
-        .am { color: #ff8a8a; } /* Brighter red color for AM */
-        .pm { color: #82b1ff; } /* Brighter blue color for PM */
+        .am { color: #ff8a8a; }
+        .pm { color: #82b1ff; }
 
         .history-table td:nth-child(1) { width: 45%; }
         .history-table td:nth-child(2), .history-table td:nth-child(3) { text-align: center; }
@@ -219,73 +216,66 @@
 <body>
 
     <div class="main-container">
-        <!-- Main animated lottery display -->
-        <div class="live-display-container">
-            <!-- Header Section -->
-            <div class="header-section">
-                <div>Date - <span id="current-date"></span></div>
-                <div>တစ်နေကုန်စာ</div>
-            </div>
-             <div class="title">မွေးဂဏန်းသတိထားပါ</div>
-            <!-- New 2D Live Result Section -->
-            <div class="live-result-section">
-                <div class="live-result-header">2D Live Result &#x21BB;</div>
-                <div class="result-row">
-                    <span class="result-label">Set</span>
-                    <span class="result-value" id="set-value">...</span>
-                </div>
-                 <!-- The "Value" row is now back and visible -->
-                <div class="result-row">
-                    <span class="result-label">Value</span>
-                    <span class="result-value" id="vale-value">...</span>
-                </div>
-                <div class="result-row">
-                    <span class="result-label">Result</span>
-                </div>
-                <div class="result-large-number" id="result-number">...</div>
-            </div>
 
-            <!-- Main Content (Shwe Pat Tee and Not Broken) -->
-            <div class="content-columns">
-                
-                <div class="column">
-                    <div class="title">ရွှေပတ်သီး</div>
-                    <div class="main-numbers">2</div>
-                </div>
-                <div class="column">
-                    <div class="title">မထိမပေါက်ကီး</div>
-                    <div class="main-numbers">7.8.9</div>
-                </div>
-                <div class="column">
-                    <div class="title">ဝမ်းချိန်း</div>
-                    <div class="main-numbers">3-4</div>
-                </div><div class="column">
-                    
-            </div>
+        <!-- Header Section -->
+        <div class="header-section">
+            <div>Date - <span id="current-date"></span></div>
+            <div>တစ်နေကုန်စာ</div>
+        </div>
 
-            <!-- Bottom Content (Punch and Backup) -->
-            <div class="content-columns">
-                <div class="column">
-                    <div class="title">ထိုးကွက်</div>
-                    <div class="sub-numbers" id="thoe-kwe-numbers">
-                        <span class="sub-number">27</span>
-                        <span class="sub-number">26</span>
-                        <span class="sub-number">25</span>
-                        <span class="sub-number">21</span>
-                                            </div>
-                </div>
-                <div class="column">
-                    <div class="title">အရံကွက်</div>
-                    <div class="sub-numbers" id="aran-kwe-numbers">
-                        <span class="sub-number">71</span>
-                        <span class="sub-number">73</span>
-                        <span class="sub-number">78</span>
-                        
-                    </div>
-                </div>
+        <!-- 2D Live Result Section -->
+        <div class="live-result-section">
+            <div class="live-result-header">2D Live Result &#x21BB;</div>
+            <div class="result-row">
+                <span class="result-label">Set</span>
+                <span class="result-value" id="set-value">...</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Value</span>
+                <span class="result-value" id="vale-value">...</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Result</span>
+            </div>
+            <div class="result-large-number" id="result-number">...</div>
+        </div>
+
+        <!-- Buttons to show/hide content -->
+        <button class="title-button" data-target="shwe-pat-tee">ရွှေပတ်သီး</button>
+        <div id="shwe-pat-tee" class="numbers-container">
+            <div class="sub-numbers">
+                <span>2</span>
             </div>
         </div>
 
+        <button class="title-button" data-target="not-broken">မထိမပေါက်ကီး</button>
+        <div id="not-broken" class="numbers-container">
+            <div class="sub-numbers">
+                <span>7</span><span>8</span><span>9</span>
+            </div>
+        </div>
+
+        <button class="title-button" data-target="one-chain">ဝမ်းချိန်း</button>
+        <div id="one-chain" class="numbers-container">
+            <div class="sub-numbers">
+                <span>3</span><span>4</span>
+            </div>
+        </div>
+
+        <button class="title-button" data-target="punch">ထိုးကွက်</button>
+        <div id="punch" class="numbers-container">
+            <div class="sub-numbers">
+                <span>27</span><span>26</span><span>25</span><span>21</span>
+            </div>
+        </div>
+
+        <button class="title-button" data-target="backup">အရံကွက်</button>
+        <div id="backup" class="numbers-container">
+            <div class="sub-numbers">
+                <span>71</span><span>73</span><span>78</span>
+            </div>
+        </div>
+        
         <!-- 2D Results History Section -->
         <div class="history-container">
             <div class="history-header">
@@ -298,10 +288,10 @@
                 </tbody>
             </table>
         </div>
+
     </div>
 
     <script>
-        // This script handles the live data updates, scheduled result capture, and history display.
         document.addEventListener('DOMContentLoaded', () => {
 
             // History data structure to store results.
@@ -475,40 +465,39 @@
                 updateHistoryTable();
             }
 
-            // Animate the bottom sub-numbers
-            const allSubNumbers = document.querySelectorAll('.sub-number');
-            const colors = ['#ff8a8a', '#82b1ff', '#00ff7f', '#ffcc00', '#f44336', '#2196f3', '#4caf50', '#ffeb3b'];
-            let lastIndex = -1;
+            // Handle button clicks to show/hide content
+            const buttons = document.querySelectorAll('.title-button');
+            const contentContainers = document.querySelectorAll('.numbers-container');
+            
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    const targetElement = document.getElementById(targetId);
 
-            function animateRandomNumber() {
-                if (allSubNumbers.length === 0) {
-                    return;
-                }
+                    // If the clicked container is already active, hide it.
+                    if (targetElement.classList.contains('active')) {
+                        targetElement.classList.remove('active');
+                    } else {
+                        // Hide all other containers and then show the one that was clicked.
+                        contentContainers.forEach(container => {
+                            container.classList.remove('active');
+                        });
+                        targetElement.classList.add('active');
+                    }
+                });
+            });
 
-                if (lastIndex !== -1) {
-                    allSubNumbers[lastIndex].classList.remove('active');
-                }
-
-                let newIndex;
-                do {
-                    newIndex = Math.floor(Math.random() * allSubNumbers.length);
-                } while (newIndex === lastIndex);
-
-                const currentNumber = allSubNumbers[newIndex];
-                currentNumber.classList.add('active');
-                currentNumber.style.color = colors[Math.floor(Math.random() * colors.length)];
-
-                lastIndex = newIndex;
-                setTimeout(animateRandomNumber, 500);
-            }
-
-            // Start the data fetching, history display, and the animation loop
+            // Start the data fetching and history display loop
             updateHistoryTable();
             fetchThaiMarketData(); // Initial data load
             setInterval(fetchThaiMarketData, 1000); // Update every 1 second
-            animateRandomNumber();
+            
+            // Note: The animateRandomNumber function was removed as it's not a common
+            // behavior for this type of application and can be distracting.
+            // If you would like it back, please let me know.
         });
     </script>
 
 </body>
 </html>
+
