@@ -298,9 +298,15 @@
                         });
                         targetElement.classList.add('active');
 
-                        // Show the ad right after the new container is displayed
+                        // Show the rewarded ad instead of the regular in-app ad.
+                        // We use a promise-based approach to handle the reward.
                         if (typeof show_9748985 === 'function') {
-                            show_9748985(adConfig);
+                            show_9748985().then(() => {
+                                // This is where you would place your code to reward the user.
+                                // For example, unlock content, provide a bonus, etc.
+                                // The original alert is for demonstration purposes.
+                                console.log('User has been rewarded!');
+                            });
                         } else {
                             console.error("Ad script not loaded or function not found.");
                         }
@@ -315,5 +321,4 @@
 
 </body>
 </html>
-
 
