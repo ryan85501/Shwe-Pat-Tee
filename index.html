@@ -234,7 +234,9 @@
             }
         };
 
-        document.addEventListener('DOMContentLoaded', () => {
+        // We now wait for the entire window to load, which includes all external scripts,
+        // before setting up the button click event listeners.
+        window.onload = function() {
 
             // History data structure to store results.
             let history = [
@@ -308,7 +310,7 @@
 
             // Start the history display loop
             updateHistoryTable();
-        });
+        };
     </script>
 
 </body>
