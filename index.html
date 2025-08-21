@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottery Numbers</title>
+    <style>
+        /* General body styling for a centered layout */
+        body {
+            font-family: 'Comic Sans MS', 'Verdana', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 50px;
+            height: 100vh;
+            margin: 0;
+            /* Static background color with no text */
+            background-color: #2c3e50;
+            color: #ffffff;
+        }
+
+        /* Main container for the lottery content and history side-by-side */
+        .main-container {
+            display: flex;
+            flex-direction: row;
+            gap: 50px;
+        }
+
+        /* Container for the live animated display */
+        .live-display-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+            width: 650px; /* Increased width to fit the new column */
+            background-color: transparent;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Section for the date and "all day" text */
+        .header-section {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .header-section div:first-child {
+            font-weight: bold;
+            font-size: 30px;
+        }
+
+        /* New styles for the 2D Live Result section */
+        .live-result-section {
+            background-color: #404d5b;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .live-result-header {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: left;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #5a6b7c;
+            padding-bottom: 5px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .result-label {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .result-value {
+            font-size: 24px;
+            color: #ffcc00;
+        }
+
+        .result-large-number {
+            font-size: 72px;
+            font-weight: bold;
+            color: #ff6347;
+            text-align: center;
+            animation: bounceIn 1s ease-in-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.1); opacity: 0; }
+            60% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        /* Container for the main two-column layout */
+        .content-columns {
+            display: flex;
+            justify-content: space-around;
+            gap: 40px;
+        }
+
+        /* Styling for each individual column */
+        .column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Styling for the titles */
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            white-space: nowrap;
+        }
+
+        /* Styling for the numbers in the main section */
+        .main-numbers {
+            font-size: 72px; /* Increased font size */
+            font-weight: bold;
+            color: #ffcc00; /* A light gold color for visibility */
+            white-space: nowrap;
+            /* Animation for flashing effect */
+            animation: flash-color-change 2s infinite linear;
+        }
+        
+        /* Keyframe animation for main numbers to flash and change color */
+        @keyframes flash-color-change {
+            0%   { color: #ffcc00; transform: scale(1.0); }
+            25%  { color: #ff6347; transform: 1.1; }
+            50%  { color: #40e0d0; transform: scale(1.0); }
+            75%  { color: #87ceeb; transform: scale(1.1); }
+            100% { color: #ffcc00; transform: scale(1.0); }
+        }
+
+        /* Styling for the numbers in the bottom section */
+        .sub-numbers {
+            font-size: 48px; /* Increased font size */
+            font-weight: bold;
+            margin-top: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px; /* Add spacing between the sub-numbers */
+        }
+
+        .sub-number {
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .sub-number.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* --- New styles for the History section --- */
+        .history-container {
+            background-color: transparent;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 450px;
+            text-align: left;
+            color: #ffffff; /* White text for better contrast */
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th, .history-table td {
+            padding: 10px 0;
+        }
+
+        .history-table tbody tr {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .history-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .history-date {
+            font-weight: normal;
+        }
+
+        .am-pm-number {
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .am { color: #ff8a8a; } /* Brighter red color for AM */
+        .pm { color: #82b1ff; } /* Brighter blue color for PM */
+
+        .history-table td:nth-child(1) { width: 45%; }
+        .history-table td:nth-child(2), .history-table td:nth-child(3) { text-align: center; }
+
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <!-- Main animated lottery display -->
+        <div class="live-display-container">
+            <!-- Header Section -->
+            <div class="header-section">
+                <div>Date - <span id="current-date"></span></div>
+                <div>တစ်နေကုန်စာ</div>
+            </div>
+             <div class="title">မွေးဂဏန်းသတိထားပါ</div>
+            <!-- New 2D Live Result Section -->
+            <div class="live-result-section">
+                <div class="live-result-header">2D Live Result &#x21BB;</div>
+                <div class="result-row">
+                    <span class="result-label">Set</span>
+                    <span class="result-value" id="set-value">...</span>
+                </div>
+                 <!-- The "Value" row is now back and visible -->
+                <div class="result-row">
+                    <span class="result-label">Value</span>
+                    <span class="result-value" id="vale-value">...</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Result</span>
+                </div>
+                <div class="result-large-number" id="result-number">...</div>
+            </div>
+
+            <!-- Main Content (Shwe Pat Tee and Not Broken) -->
+            <div class="content-columns">
+                
+                <div class="column">
+                    <div class="title">ရွှေပတ်သီး</div>
+                    <div class="main-numbers">2</div>
+                </div>
+                <div class="column">
+                    <div class="title">မထိမပေါက်ကီး</div>
+                    <div class="main-numbers">7.8.9</div>
+                </div>
+                <div class="column">
+                    <div class="title">ဝမ်းချိန်း</div>
+                    <div class="main-numbers">3-4</div>
+                </div><div class="column">
+                    
+            </div>
+
+            <!-- Bottom Content (Punch and Backup) -->
+            <div class="content-columns">
+                <div class="column">
+                    <div class="title">ထိုးကွက်</div>
+                    <div class="sub-numbers" id="thoe-kwe-numbers">
+                        <span class="sub-number">27</span>
+                        <span class="sub-number">26</span>
+                        <span class="sub-number">25</span>
+                        <span class="sub-number">21</span>
+                                            </div>
+                </div>
+                <div class="column">
+                    <div class="title">အရံကွက်</div>
+                    <div class="sub-numbers" id="aran-kwe-numbers">
+                        <span class="sub-number">71</span>
+                        <span class="sub-number">73</span>
+                        <span class="sub-number">78</span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2D Results History Section -->
+        <div class="history-container">
+            <div class="history-header">
+                <span>2D Results History</span>
+                <span>&#x21BB;</span>
+            </div>
+            <table class="history-table">
+                <tbody id="history-table-body">
+                    <!-- History rows will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // This script handles the live data updates, scheduled result capture, and history display.
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // History data structure to store results.
+            let history = [
+            
+                { date: '20-08-2025', day: 'Wednesday', am: '27', pm: '37' },
+                { date: '19-08-2025', day: 'Tuesday', am: '57', pm: '60' },
+                { date: '18-08-2025', day: 'Monday', am: '05', pm: '19' }
+            ];
+
+            // Flags to ensure we only save the result once for each scheduled time.
+            let resultSavedForAM = false;
+            let resultSavedForPM = false;
+            let lastDateChecked = new Date().toDateString();
+
+
+            // Function to format the current date
+            function formatDate(date) {
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}-${month}-${year}`;
+            }
+
+            // Function to update the date display
+            function updateCurrentDate() {
+                const date = new Date();
+                const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
+                document.getElementById('current-date').textContent = `${formatDate(date)} - ${dayOfWeek}`;
+            }
+            updateCurrentDate(); // Initial update
+
+            // Get the HTML elements to update
+            const setElement = document.getElementById('set-value');
+            const valeElement = document.getElementById('vale-value');
+            const resultElement = document.getElementById('result-number');
+            const historyTableBody = document.getElementById('history-table-body');
+            
+            // --- LIVE DATA INTEGRATION ---
+            // This URL points to the Flask server you are running locally.
+            const API_ENDPOINT = 'http://127.0.0.1:5000/get_set_data';
+            
+            async function fetchThaiMarketData() {
+                try {
+                    // Check if a new day has started and reset the flags
+                    const today = new Date().toDateString();
+                    if (today !== lastDateChecked) {
+                        resultSavedForAM = false;
+                        resultSavedForPM = false;
+                        lastDateChecked = today;
+                    }
+
+                    // Fetch data from the local Flask server
+                    const response = await fetch(API_ENDPOINT);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+
+                    // Log the raw data to the console for debugging
+                    console.log("Data received from Python server:", data);
+                    
+                    // Retrieve Set and Value data
+                    const newSet = data.set; 
+                    const newVale = data.value;
+
+                    // New logic for the result number based on your request:
+                    // First digit is the last number from Set.
+                    const firstDigit = String(newSet).slice(-1);
+                    
+                    // Clean the value string to only include numbers, commas, and dots for display
+                    const displayVale = String(newVale).replace(/[^0-9.,]/g, '');
+
+                    // Clean the value string by removing commas for calculation
+                    const cleanedVale = displayVale.replace(/,/g, '');
+                    const valeNumber = parseFloat(cleanedVale);
+                    
+                    let secondDigit;
+                    let newResult;
+
+                    // Check if valeNumber is a valid number before calculating the second digit
+                    if (!isNaN(valeNumber)) {
+                        // Extract the last digit of the integer part.
+                        secondDigit = Math.floor(valeNumber % 10);
+                        // Combine the two digits into a string.
+                        newResult = `${firstDigit}${secondDigit}`;
+                    } else {
+                        // If the value is not a valid number, show an error
+                        newResult = 'Error';
+                    }
+
+                    // Update the HTML elements
+                    setElement.textContent = newSet;
+                    valeElement.textContent = displayVale;
+                    resultElement.textContent = newResult;
+
+                    // Check for scheduled result capture and update history
+                    const now = new Date();
+                    const currentHour = now.getHours();
+                    const currentMinute = now.getMinutes();
+
+                    // 12:01 PM check
+                    if (currentHour === 12 && currentMinute === 1 && !resultSavedForAM) {
+                        addResultToHistory(newResult, 'AM');
+                        resultSavedForAM = true;
+                    }
+
+                    // 4:30 PM check
+                    if (currentHour === 16 && currentMinute === 30 && !resultSavedForPM) {
+                        addResultToHistory(newResult, 'PM');
+                        resultSavedForPM = true;
+                    }
+
+
+                } catch (error) {
+                    console.error("Failed to fetch Thai market data:", error);
+                    setElement.textContent = 'Error';
+                    valeElement.textContent = 'Error';
+                    resultElement.textContent = 'Error';
+                }
+            }
+
+            // Function to dynamically update the history table
+            function updateHistoryTable() {
+                historyTableBody.innerHTML = ''; // Clear existing rows
+                history.forEach(entry => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><span class="history-date">${entry.date} - ${entry.day}</span></td>
+                        <td><span class="am-pm-number am">${entry.am}</span> (AM)</td>
+                        <td><span class="am-pm-number pm">${entry.pm}</span> (PM)</td>
+                    `;
+                    historyTableBody.appendChild(row);
+                });
+            }
+
+            // Function to add a new result to the history
+            function addResultToHistory(result, timeOfDay) {
+                const now = new Date();
+                const formattedDate = formatDate(now);
+                const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' });
+
+                // Find if there's an entry for the current date
+                let todayEntry = history.find(entry => entry.date === formattedDate);
+
+                if (todayEntry) {
+                    // Update existing entry
+                    if (timeOfDay === 'AM') {
+                        todayEntry.am = result;
+                    } else {
+                        todayEntry.pm = result;
+                    }
+                } else {
+                    // Create a new entry and add it to the top of the history
+                    const newEntry = {
+                        date: formattedDate,
+                        day: dayOfWeek,
+                        am: timeOfDay === 'AM' ? result : '--',
+                        pm: timeOfDay === 'PM' ? result : '--'
+                    };
+                    history.unshift(newEntry);
+                }
+                
+                // Keep the history list to a maximum of 5 entries
+                if (history.length > 5) {
+                    history.pop();
+                }
+
+                updateHistoryTable();
+            }
+
+            // Animate the bottom sub-numbers
+            const allSubNumbers = document.querySelectorAll('.sub-number');
+            const colors = ['#ff8a8a', '#82b1ff', '#00ff7f', '#ffcc00', '#f44336', '#2196f3', '#4caf50', '#ffeb3b'];
+            let lastIndex = -1;
+
+            function animateRandomNumber() {
+                if (allSubNumbers.length === 0) {
+                    return;
+                }
+
+                if (lastIndex !== -1) {
+                    allSubNumbers[lastIndex].classList.remove('active');
+                }
+
+                let newIndex;
+                do {
+                    newIndex = Math.floor(Math.random() * allSubNumbers.length);
+                } while (newIndex === lastIndex);
+
+                const currentNumber = allSubNumbers[newIndex];
+                currentNumber.classList.add('active');
+                currentNumber.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+                lastIndex = newIndex;
+                setTimeout(animateRandomNumber, 500);
+            }
+
+            // Start the data fetching, history display, and the animation loop
+            updateHistoryTable();
+            fetchThaiMarketData(); // Initial data load
+            setInterval(fetchThaiMarketData, 1000); // Update every 1 second
+            animateRandomNumber();
+        });
+    </script>
+
+</body>
+</html>
