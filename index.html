@@ -166,6 +166,18 @@
         .history-table td:nth-child(1) { width: 45%; }
         .history-table td:nth-child(2), .history-table td:nth-child(3) { text-align: center; }
 
+        /* Style for the embedded ad container */
+        .embedded-ad-container {
+            width: 100%;
+            height: 50px; /* Standard ad banner height */
+            background-color: #1a2a3a;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
     </style>
 </head>
 <body>
@@ -224,7 +236,8 @@
             </div>
         </div>
         
-        <!-- The Ad Button has been removed as requested -->
+        <!-- The dedicated Ad Button has been re-added -->
+        <button id="ad-button" class="title-button">Rewarded Ad</button>
 
         <!-- 2D Results History Section -->
         <div class="history-container">
@@ -237,6 +250,11 @@
                     <!-- History rows will be inserted here by JavaScript -->
                 </tbody>
             </table>
+        </div>
+
+        <!-- New: Embedded Ad Container -->
+        <div id="embedded-ad" class="embedded-ad-container">
+            <!-- The ad will be injected here by the ad network script -->
         </div>
 
     </div>
@@ -252,9 +270,6 @@
     </script>
 
     <script>
-        // We now use DOMContentLoaded, which is more reliable than window.onload
-        // as it fires as soon as the HTML document is loaded and parsed,
-        // without waiting for stylesheets, images, and subframes to finish loading.
         document.addEventListener('DOMContentLoaded', () => {
             
             // History data structure to store results.
@@ -298,7 +313,55 @@
                 });
             }
 
-            // Handle button clicks to show/hide content and show ad
+            // Function to handle showing the rewarded ad
+            const showRewardedAd = () => {
+                if (window.TelegramAdsController) {
+                    window.TelegramAdsController.showRewardedAd().then(result => {
+                        console.log('Ad show result:', result);
+                    }).catch(error => {
+                        console.error('Ad failed to show:', error);
+                    });
+                } else {
+                    console.error('TelegramAdsController not available.');
+                }
+            };
+
+            // Function to handle showing the interstitial banner ad
+            const showInterstitialBanner = () => {
+                if (window.TelegramAdsController) {
+                    window.TelegramAdsController.showInterstitialBanner().then(result => {
+                        console.log('Interstitial banner show result:', result);
+                    }).catch(error => {
+                        console.error('Interstitial banner failed to show:', error);
+                    });
+                } else {
+                    console.error('TelegramAdsController not available.');
+                }
+            };
+            
+            // Function to show the embedded banner ad in its container
+            const showEmbeddedBanner = () => {
+                const embeddedAdContainer = document.getElementById('embedded-ad');
+                if (window.TelegramAdsController) {
+                    window.TelegramAdsController.showEmbeddedBanner({
+                        container: embeddedAdContainer
+                    }).then(result => {
+                        console.log('Embedded banner show result:', result);
+                    }).catch(error => {
+                        console.error('Embedded banner failed to show:', error);
+                    });
+                } else {
+                    console.error('TelegramAdsController not available.');
+                }
+            };
+            
+            // Get the button to show the ad explicitly
+            const adButton = document.getElementById('ad-button');
+            if (adButton) {
+                adButton.addEventListener('click', showRewardedAd);
+            }
+
+            // Handle button clicks to show/hide content
             const buttons = document.querySelectorAll('.title-button');
             const contentContainers = document.querySelectorAll('.numbers-container');
             
@@ -316,12 +379,23 @@
                             container.classList.remove('active');
                         });
                         targetElement.classList.add('active');
+                        
+                        // Show a rewarded ad when a lottery button is clicked
+                        showRewardedAd();
                     }
                 });
             });
 
             // Start the history display loop
             updateHistoryTable();
+
+            // Show an interstitial banner ad shortly after the page loads
+            setTimeout(() => {
+                showInterstitialBanner();
+            }, 1000); // 1 second delay
+
+            // Show the embedded banner ad when the page is fully loaded
+            showEmbeddedBanner();
         });
     </script>
 
