@@ -190,7 +190,7 @@
             <div>တစ်နေကုန်စာ</div>
         </div>
 
-        <!-- Buttons to show/hide content -->
+        <!-- Buttons to show/hide content. Clicking these buttons will now trigger a rewarded ad. -->
         <button class="title-button" data-target="shwe-pat-tee">ရွှေပတ်သီး</button>
         <div id="shwe-pat-tee" class="numbers-container">
             <div class="sub-numbers">
@@ -236,8 +236,7 @@
             </div>
         </div>
         
-        <!-- The dedicated Ad Button has been re-added -->
-        <button id="ad-button" class="title-button">Rewarded Ad</button>
+        <!-- The dedicated Ad Button has been removed. The ad is now triggered by the number buttons. -->
 
         <!-- 2D Results History Section -->
         <div class="history-container">
@@ -252,22 +251,17 @@
             </table>
         </div>
 
-        <!-- New: Embedded Ad Container -->
+        <!-- Embedded Ad Container is still present but no ad code is injected into it. -->
         <div id="embedded-ad" class="embedded-ad-container">
-            <!-- The ad will be injected here by the ad network script -->
+            <!-- No ad will be injected here because the code was removed. -->
         </div>
 
     </div>
 
+    <!-- START OF NEW AD CODE FROM libtl.com -->
     <!-- Ad script to load the ad network SDK -->
-    <script src="https://richinfo.co/richpartners/telegram/js/tg-ob.js"></script>
-    <script>
-        window.TelegramAdsController = new TelegramAdsController();
-        window.TelegramAdsController.initialize({
-            pubId: "983977",
-            appId: "3386",
-        });
-    </script>
+    <script src='//libtl.com/sdk.js' data-zone='9748985' data-sdk='show_9748985'></script>
+    <!-- END OF NEW AD CODE -->
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -313,89 +307,53 @@
                 });
             }
 
-            // Function to handle showing the rewarded ad
-            const showRewardedAd = () => {
-                if (window.TelegramAdsController) {
-                    window.TelegramAdsController.showRewardedAd().then(result => {
-                        console.log('Ad show result:', result);
-                    }).catch(error => {
-                        console.error('Ad failed to show:', error);
-                    });
+            // Function to show the content associated with a button
+            const showContent = (button) => {
+                const targetId = button.dataset.target;
+                const targetElement = document.getElementById(targetId);
+
+                // If the clicked container is already active, hide it.
+                if (targetElement.classList.contains('active')) {
+                    targetElement.classList.remove('active');
                 } else {
-                    console.error('TelegramAdsController not available.');
+                    // Hide all other containers and then show the one that was clicked.
+                    const contentContainers = document.querySelectorAll('.numbers-container');
+                    contentContainers.forEach(container => {
+                        container.classList.remove('active');
+                    });
+                    targetElement.classList.add('active');
                 }
             };
 
-            // Function to handle showing the interstitial banner ad
-            const showInterstitialBanner = () => {
-                if (window.TelegramAdsController) {
-                    window.TelegramAdsController.showInterstitialBanner().then(result => {
-                        console.log('Interstitial banner show result:', result);
-                    }).catch(error => {
-                        console.error('Interstitial banner failed to show:', error);
-                    });
-                } else {
-                    console.error('TelegramAdsController not available.');
-                }
-            };
-            
-            // Function to show the embedded banner ad in its container
-            const showEmbeddedBanner = () => {
-                const embeddedAdContainer = document.getElementById('embedded-ad');
-                if (window.TelegramAdsController) {
-                    window.TelegramAdsController.showEmbeddedBanner({
-                        container: embeddedAdContainer
-                    }).then(result => {
-                        console.log('Embedded banner show result:', result);
-                    }).catch(error => {
-                        console.error('Embedded banner failed to show:', error);
-                    });
-                } else {
-                    console.error('TelegramAdsController not available.');
-                }
-            };
-            
-            // Get the button to show the ad explicitly
-            const adButton = document.getElementById('ad-button');
-            if (adButton) {
-                adButton.addEventListener('click', showRewardedAd);
-            }
-
-            // Handle button clicks to show/hide content
+            // Handle button clicks to show/hide content and trigger the rewarded ad
             const buttons = document.querySelectorAll('.title-button');
-            const contentContainers = document.querySelectorAll('.numbers-container');
             
             buttons.forEach(button => {
                 button.addEventListener('click', () => {
-                    const targetId = button.dataset.target;
-                    const targetElement = document.getElementById(targetId);
-
-                    // If the clicked container is already active, hide it.
-                    if (targetElement.classList.contains('active')) {
-                        targetElement.classList.remove('active');
-                    } else {
-                        // Hide all other containers and then show the one that was clicked.
-                        contentContainers.forEach(container => {
-                            container.classList.remove('active');
+                    // Check if the ad function is available.
+                    if (typeof show_9748985 === 'function') {
+                        // The user has requested the 'pop' ad format.
+                        show_9748985('pop').then(() => {
+                            // This code runs after the ad has been successfully shown.
+                            console.log('User has been rewarded.');
+                            showContent(button); // Now show the content
+                        }).catch(error => {
+                            // This code runs if the ad fails to load or show.
+                            console.error('Ad failed to show:', error);
+                            showContent(button); // Show the content anyway to avoid a bad user experience.
                         });
-                        targetElement.classList.add('active');
-                        
-                        // Show a rewarded ad when a lottery button is clicked
-                        showRewardedAd();
+                    } else {
+                        console.error('Ad function show_9748985 not available.');
+                        showContent(button); // Fallback: show the content directly if the ad fails
                     }
                 });
             });
 
             // Start the history display loop
             updateHistoryTable();
-
-            // Show an interstitial banner ad shortly after the page loads
-            setTimeout(() => {
-                showInterstitialBanner();
-            }, 1000); // 1 second delay
-
-            // Show the embedded banner ad when the page is fully loaded
-            showEmbeddedBanner();
+            
+            // Note: Interstitial and embedded banner ad calls have been removed
+            // because code was only provided for the rewarded ad.
         });
     </script>
 
