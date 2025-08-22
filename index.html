@@ -95,6 +95,17 @@
             color: #FFD700; /* Added gold color here */
         }
         
+        /* New flashing animation for the numbers */
+        .flashing-number {
+            animation: flash-animation 1.5s infinite alternate;
+        }
+
+        @keyframes flash-animation {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
         .sub-number {
             opacity: 0;
             transform: scale(0.5);
@@ -171,40 +182,49 @@
         <button class="title-button" data-target="shwe-pat-tee">ရွှေပတ်သီး</button>
         <div id="shwe-pat-tee" class="numbers-container">
             <div class="sub-numbers">
-                <span>2</span>
+                <span class="flashing-number">7</span>
             </div>
         </div>
 
         <button class="title-button" data-target="not-broken">မထိမပေါက်ကီး</button>
         <div id="not-broken" class="numbers-container">
             <div class="sub-numbers">
-                <span>7</span><span>8</span><span>9</span>
+                <span class="flashing-number">7</span>
+                <span class="flashing-number">8</span>
+                <span class="flashing-number">9</span>
             </div>
         </div>
 
         <button class="title-button" data-target="one-chain">ဝမ်းချိန်း</button>
         <div id="one-chain" class="numbers-container">
             <div class="sub-numbers">
-                <span>3</span><span>4</span>
+                <span class="flashing-number">5</span>
+                <span class="flashing-number">6</span>
             </div>
         </div>
 
         <button class="title-button" data-target="punch">ထိုးကွက်</button>
         <div id="punch" class="numbers-container">
             <div class="sub-numbers">
-                <span>27</span><span>26</span><span>25</span><span>21</span>
+                <span class="flashing-number">37</span>
+                <span class="flashing-number">38</span>
+                <span class="flashing-number">39</span>
+                <span class="flashing-number">72</span>
+                <span class="flashing-number">74</span>
             </div>
         </div>
 
         <button class="title-button" data-target="backup">အရံကွက်</button>
         <div id="backup" class="numbers-container">
             <div class="sub-numbers">
-                <span>71</span><span>73</span><span>78</span>
+                <span class="flashing-number">35</span>
+                <span class="flashing-number">36</span>
+                <span class="flashing-number">75</span>
+                <span class="flashing-number">76</span>
             </div>
         </div>
         
-        <!-- Ad Button -->
-        <button class="title-button" id="ad-button">ကြည့်ဖို့အမှတ်ယူရန်နှိပ်ပါ။</button>
+        <!-- The Ad Button has been removed as requested -->
 
         <!-- 2D Results History Section -->
         <div class="history-container">
@@ -222,28 +242,24 @@
     </div>
 
     <!-- Ad script to load the ad network SDK -->
-    <script src='//libtl.com/sdk.js' data-zone='9748985' data-sdk='show_9748985'></script>
+    <script src="https://richinfo.co/richpartners/telegram/js/tg-ob.js"></script>
+    <script>
+        window.TelegramAdsController = new TelegramAdsController();
+        window.TelegramAdsController.initialize({
+            pubId: "983977",
+            appId: "3386",
+        });
+    </script>
 
     <script>
-        // The ad configuration, to be called when a button is clicked
-        const adConfig = {
-            type: 'inApp',
-            inAppSettings: {
-                frequency: 2,
-                capping: 0.1,
-                interval: 30,
-                timeout: 5,
-                everyPage: false
-            }
-        };
-
-        // We now wait for the entire window to load, which includes all external scripts,
-        // before setting up the button click event listeners.
-        window.onload = function() {
-
+        // We now use DOMContentLoaded, which is more reliable than window.onload
+        // as it fires as soon as the HTML document is loaded and parsed,
+        // without waiting for stylesheets, images, and subframes to finish loading.
+        document.addEventListener('DOMContentLoaded', () => {
+            
             // History data structure to store results.
             let history = [
-                { date: '21-08-2025', day: 'Thursday', am: '04', pm: '--' },
+                { date: '21-08-2025', day: 'Thursday', am: '04', pm: '90' },
                 { date: '20-08-2025', day: 'Wednesday', am: '27', pm: '37' },
                 { date: '19-08-2025', day: 'Tuesday', am: '57', pm: '60' },
                 { date: '18-08-2025', day: 'Monday', am: '05', pm: '19' }
@@ -264,7 +280,7 @@
                 document.getElementById('current-date').textContent = `${formatDate(date)} - ${dayOfWeek}`;
             }
             updateCurrentDate(); // Initial update
-
+            
             // Get the HTML elements to update
             const historyTableBody = document.getElementById('history-table-body');
 
@@ -300,28 +316,14 @@
                             container.classList.remove('active');
                         });
                         targetElement.classList.add('active');
-
-                        // Show the rewarded ad instead of the regular in-app ad.
-                        // We use a promise-based approach to handle the reward.
-                        if (typeof show_9748985 === 'function') {
-                            show_9748985().then(() => {
-                                // This is where you would place your code to reward the user.
-                                // For example, unlock content, provide a bonus, etc.
-                                // The original alert is for demonstration purposes.
-                                console.log('User has been rewarded!');
-                            });
-                        } else {
-                            console.error("Ad script not loaded or function not found.");
-                        }
                     }
                 });
             });
 
             // Start the history display loop
             updateHistoryTable();
-        };
+        });
     </script>
 
 </body>
 </html>
-
