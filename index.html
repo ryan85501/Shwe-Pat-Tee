@@ -3,36 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lottery Numbers</title>
+    <title>Lucky Numbers</title>
     <style>
-        /* General body styling for a centered, single-column layout */
+        /* General body and container styling */
         body {
             font-family: 'Comic Sans MS', 'Verdana', sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
             margin: 0;
-            background-color: #2c3e50;
-            color: #ffffff;
+            background-color: #f0f4f8; /* Soft light gray-blue background */
+            color: #2c3e50;
             min-height: 100vh;
-            box-sizing: border-box; /* Ensures padding doesn't add to total width/height */
+            box-sizing: border-box;
+            text-align: center;
         }
 
-        /* Main container for all lottery content in a single column */
         .main-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            max-width: 600px; /* Max width for better readability on large screens */
+            max-width: 600px;
             gap: 20px;
         }
 
-        /* Header Section for Date and All Day text */
+        /* Styling for the cute, narrow button blocks */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .button-block {
+            background-color: #ffe6e6; /* Pastel pink */
+            color: #d35400; /* Dark orange for contrast */
+            font-size: 16px;
+            font-weight: bold;
+            padding: 15px 10px; /* Reduced padding for narrower look */
+            border-radius: 20px; /* More rounded corners for a cute feel */
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* A slightly different color for hover state */
+        .button-block:hover {
+            background-color: #fff0f0; 
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .button-block:active {
+            transform: scale(0.98);
+        }
+
+        .button-text {
+            line-height: 1.2;
+        }
+
+        .button-emoji {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        /* Central container for the numbers to appear */
+        .numbers-container {
+            width: 80%;
+            max-width: 300px;
+            background-color: #ffcccc; /* Soft red for the display box */
+            padding: 20px;
+            border-radius: 20px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .numbers-container.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .sub-numbers {
+            font-size: 32px;
+            font-weight: bold;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            color: #c0392b; /* A darker red for numbers */
+        }
+        
+        /* Header styling */
         .header-section {
             font-size: 24px;
             margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
 
         .header-section div:first-child {
@@ -40,92 +125,15 @@
             font-size: 30px;
         }
 
-        /* Styling for the new button titles */
-        .title-button {
-            width: 100%;
-            background-color: #34495e;
-            color: #fff;
-            border: none;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 28px;
-            font-weight: bold;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        
-        .title-button:hover {
-            background-color: #5d6d7e;
-        }
-
-        .title-button:active {
-            transform: scale(0.98);
-        }
-
-        /* Container for the numbers that will be shown/hidden */
-        .numbers-container {
-            width: 100%;
-            display: none; /* Initially hidden */
-            margin-top: -10px;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #404d5b;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .numbers-container.active {
-            display: block; /* Show when active */
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Styling for the numbers inside the containers */
-        .sub-numbers {
-            font-size: 48px;
-            font-weight: bold;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 25px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            color: #FFD700; /* Added gold color here */
-        }
-        
-        /* New flashing animation for the numbers */
-        .flashing-number {
-            animation: flash-animation 1.5s infinite alternate;
-        }
-
-        @keyframes flash-animation {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        .sub-number {
-            opacity: 0;
-            transform: scale(0.5);
-            transition: all 0.3s ease-in-out;
-        }
-
-        .sub-number.active {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        /* 2D Results History Section */
+        /* History styling */
         .history-container {
             background-color: transparent;
             padding: 20px;
             border-radius: 10px;
             width: 100%;
             text-align: left;
-            color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            color: #555555;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
 
         .history-header {
@@ -144,7 +152,7 @@
 
         .history-table th, .history-table td {
             padding: 10px 0;
-            border-bottom: 1px solid #5a6b7c;
+            border-bottom: 1px solid #dcdcdc;
         }
 
         .history-table tbody tr:last-child td {
@@ -160,23 +168,11 @@
             margin: 0 5px;
         }
 
-        .am { color: #ff8a8a; }
-        .pm { color: #82b1ff; }
+        .am { color: #e74c3c; }
+        .pm { color: #3498db; }
 
         .history-table td:nth-child(1) { width: 45%; }
         .history-table td:nth-child(2), .history-table td:nth-child(3) { text-align: center; }
-
-        /* Style for the embedded ad container */
-        .embedded-ad-container {
-            width: 100%;
-            height: 50px; /* Standard ad banner height */
-            background-color: #1a2a3a;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-        }
 
     </style>
 </head>
@@ -184,77 +180,56 @@
 
     <div class="main-container">
         
-        <!-- A button to show the "မွေးဂဏန်း" section -->
-        <button class="title-button" data-target="mwe-ga-nan">မွေးဂဏန်း</button>
-        <div id="mwe-ga-nan" class="numbers-container">
-            <div class="sub-numbers">
-                <span class="flashing-number">90</span>
-                <span class="flashing-number">12</span>
-                <span class="flashing-number">34</span>
-                <span class="flashing-number">56</span>
-                <span class="flashing-number">78</span>
-            </div>
-        </div>
-
         <!-- Header Section -->
         <div class="header-section">
             <div>Date - <span id="current-date"></span></div>
             <div>တစ်နေကုန်စာ</div>
         </div>
-        
-        <!-- New button for "တစ်ကွက်ကောင်း" -->
-        <button class="title-button" data-target="one-kwet">တစ်ကွက်ကောင်း</button>
-        <div id="one-kwet" class="numbers-container">
-            <div class="sub-numbers">
-                <span class="flashing-number">82</span>
-            </div>
+
+        <!-- Button grid for the number categories -->
+        <div class="button-grid">
+            <button class="button-block" data-target="mwe-ga-nan">
+                <span class="button-emoji">🍀</span>
+                <span class="button-text">မွေးဂဏန်း</span>
+            </button>
+            <button class="button-block" data-target="one-kwet">
+                <span class="button-emoji">🎯</span>
+                <span class="button-text">တစ်ကွက်ကောင်း</span>
+            </button>
+            <button class="button-block" data-target="shwe-pat-tee">
+                <span class="button-emoji">💰</span>
+                <span class="button-text">ရွှေပတ်သီး</span>
+            </button>
+            <button class="button-block" data-target="not-broken">
+                <span class="button-emoji">🔑</span>
+                <span class="button-text">မထိမပေါက်ကီး</span>
+            </button>
+            <button class="button-block" data-target="one-chain">
+                <span class="button-emoji">⛓️</span>
+                <span class="button-text">ဝမ်းချိန်း</span>
+            </button>
+            <button class="button-block" data-target="punch">
+                <span class="button-emoji">💥</span>
+                <span class="button-text">ထိုးကွက်</span>
+            </button>
         </div>
 
-        <!-- Buttons to show/hide content. Clicking these buttons will now trigger a rewarded ad. -->
-        <button class="title-button" data-target="shwe-pat-tee">ရွှေပတ်သီး</button>
-        <div id="shwe-pat-tee" class="numbers-container">
-            <div class="sub-numbers">
-                <span class="flashing-number">8</span>
-            </div>
-        </div>
-
-        <button class="title-button" data-target="not-broken">မထိမပေါက်ကီး</button>
-        <div id="not-broken" class="numbers-container">
-            <div class="sub-numbers">
-                <span class="flashing-number">7</span>
-                <span class="flashing-number">8</span>
-                <span class="flashing-number">9</span>
-            </div>
-        </div>
-
-        <button class="title-button" data-target="one-chain">ဝမ်းချိန်း</button>
-        <div id="one-chain" class="numbers-container">
-            <div class="sub-numbers">
-                <span class="flashing-number">1</span>
-                <span class="flashing-number">2</span>
-            </div>
-        </div>
-
-        <button class="title-button" data-target="punch">ထိုးကွက်</button>
-        <div id="punch" class="numbers-container">
-            <div class="sub-numbers">
-                <span class="flashing-number">82</span>
-                <span class="flashing-number">83</span>
-                <span class="flashing-number">84</span>
-                
-            </div>
-        </div>
-
-        <button class="title-button" data-target="backup">အရံကွက်</button>
-        <div id="backup" class="numbers-container">
-            <div class="sub-numbers">
-                <span class="flashing-number">07</span>
-                <span class="flashing-number">09</span>
-                
+        <!-- The container where the numbers will be displayed after ad view -->
+        <div id="numbers-display" class="numbers-container">
+            <div id="numbers-content" class="sub-numbers">
+                <!-- Numbers will be dynamically inserted here -->
             </div>
         </div>
         
-        <!-- The dedicated Ad Button has been removed. The ad is now triggered by the number buttons. -->
+        <!-- Data storage for numbers, hidden from view -->
+        <div style="display: none;">
+            <div id="mwe-ga-nan-numbers">90, 12, 34, 56, 78</div>
+            <div id="one-kwet-numbers">82</div>
+            <div id="shwe-pat-tee-numbers">8</div>
+            <div id="not-broken-numbers">7, 8, 9</div>
+            <div id="one-chain-numbers">1, 2</div>
+            <div id="punch-numbers">82, 83, 84</div>
+        </div>
 
         <!-- 2D Results History Section -->
         <div class="history-container">
@@ -269,15 +244,9 @@
             </table>
         </div>
 
-        <!-- Embedded Ad Container is still present but no ad code is injected into it. -->
-        <div id="embedded-ad" class="embedded-ad-container">
-            <!-- No ad will be injected here because the code was removed. -->
-        </div>
-
     </div>
 
     <!-- START OF NEW AD CODE FROM libtl.com -->
-    <!-- Ad script to load the ad network SDK -->
     <script src='//libtl.com/sdk.js' data-zone='9748985' data-sdk='show_9748985'></script>
     <!-- END OF NEW AD CODE -->
 
@@ -286,11 +255,11 @@
             
             // History data structure to store results.
             let history = [
+                { date: '08-25-2025', day: 'Monday', am: '16', pm: '--' }, // New history entry from your image
                 { date: '22-08-2025', day: 'Friday', am: '74', pm: '99' },
                 { date: '21-08-2025', day: 'Thursday', am: '04', pm: '90' },
                 { date: '20-08-2025', day: 'Wednesday', am: '27', pm: '37' },
-                { date: '19-08-2025', day: 'Tuesday', am: '57', pm: '60' },
-                { date: '18-08-2025', day: 'Monday', am: '05', pm: '19' }
+                { date: '19-08-2025', day: 'Tuesday', am: '57', pm: '60' }
             ];
 
             // Function to format the current date
@@ -307,14 +276,15 @@
                 const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
                 document.getElementById('current-date').textContent = `${formatDate(date)} - ${dayOfWeek}`;
             }
-            updateCurrentDate(); // Initial update
+            updateCurrentDate();
             
-            // Get the HTML elements to update
             const historyTableBody = document.getElementById('history-table-body');
-
+            const numbersDisplayContainer = document.getElementById('numbers-display');
+            const numbersContent = document.getElementById('numbers-content');
+            
             // Function to dynamically update the history table
             function updateHistoryTable() {
-                historyTableBody.innerHTML = ''; // Clear existing rows
+                historyTableBody.innerHTML = '';
                 history.forEach(entry => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -329,50 +299,48 @@
             // Function to show the content associated with a button
             const showContent = (button) => {
                 const targetId = button.dataset.target;
-                const targetElement = document.getElementById(targetId);
+                const numbersSourceId = `${targetId}-numbers`;
+                const numbersText = document.getElementById(numbersSourceId).textContent;
+                const numbersArray = numbersText.split(',').map(s => s.trim());
 
-                // If the clicked container is already active, hide it.
-                if (targetElement.classList.contains('active')) {
-                    targetElement.classList.remove('active');
-                } else {
-                    // Hide all other containers and then show the one that was clicked.
-                    const contentContainers = document.querySelectorAll('.numbers-container');
-                    contentContainers.forEach(container => {
-                        container.classList.remove('active');
-                    });
-                    targetElement.classList.add('active');
-                }
+                numbersContent.innerHTML = ''; // Clear existing content
+                
+                numbersArray.forEach(num => {
+                    const span = document.createElement('span');
+                    span.textContent = num;
+                    span.className = 'flashing-number';
+                    numbersContent.appendChild(span);
+                });
+
+                numbersDisplayContainer.classList.add('active');
             };
 
-            // Handle button clicks to show/hide content and trigger the rewarded ad
-            const buttons = document.querySelectorAll('.title-button');
+            // Handle button clicks on the block buttons
+            const blockButtons = document.querySelectorAll('.button-block');
             
-            buttons.forEach(button => {
+            blockButtons.forEach(button => {
                 button.addEventListener('click', () => {
+                    // Hide any currently displayed numbers before showing a new set
+                    numbersDisplayContainer.classList.remove('active');
+
                     // Check if the ad function is available.
                     if (typeof show_9748985 === 'function') {
-                        // The user has requested the 'pop' ad format.
                         show_9748985('pop').then(() => {
-                            // This code runs after the ad has been successfully shown.
                             console.log('User has been rewarded.');
-                            showContent(button); // Now show the content
+                            showContent(button);
                         }).catch(error => {
-                            // This code runs if the ad fails to load or show.
                             console.error('Ad failed to show:', error);
-                            showContent(button); // Show the content anyway to avoid a bad user experience.
+                            showContent(button);
                         });
                     } else {
                         console.error('Ad function show_9748985 not available.');
-                        showContent(button); // Fallback: show the content directly if the ad fails
+                        showContent(button);
                     }
                 });
             });
 
             // Start the history display loop
             updateHistoryTable();
-            
-            // Note: Interstitial and embedded banner ad calls have been removed
-            // because code was only provided for the rewarded ad.
         });
     </script>
 
