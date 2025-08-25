@@ -97,6 +97,37 @@
             color: #ffbf00; /* Bright gold color */
             font-size: 1.2em; /* Slightly larger font size */
         }
+
+        /* New styling for the YouTube button, now smaller and transparent */
+        .social-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-color: transparent; /* Changed to transparent */
+            padding: 0.5rem; /* Reduced padding */
+            border-radius: 1rem;
+            box-shadow: none; /* Removed shadow for a lighter look */
+            transition: all 0.3s ease-in-out;
+            transform: scale(1);
+        }
+        .social-button:hover {
+            background-color: transparent; /* Also transparent on hover */
+            transform: scale(1.05);
+        }
+        .social-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Adjust icon and text size for the smaller button */
+        .social-button .social-icon {
+            font-size: 2rem; /* Smaller icon size */
+        }
+        .social-button .mt-1 {
+            font-size: 0.75rem; /* Smaller text size */
+            margin-top: 0.25rem;
+        }
     </style>
 </head>
 <body class="p-4 sm:p-8">
@@ -136,6 +167,18 @@
                 <span class="text-3xl">💥</span>
                 <span class="text-base font-bold mt-1">ထိုးကွက်</span>
             </button>
+
+            <!-- YouTube Channel Button -->
+            <a href="https://youtube.com/@2dshwepattee?si=KYIfOzw5lLajvCvE" target="_blank" class="social-button text-red-600" rel="noopener noreferrer">
+                <i class="fab fa-youtube social-icon"></i>
+                <span class="text-red-600 mt-1">YouTube Channel</span>
+            </a>
+            
+            <!-- Facebook Page Button -->
+            <a href="https://www.facebook.com/share/17EGV6so5S/" target="_blank" class="social-button text-blue-600" rel="noopener noreferrer">
+                <i class="fab fa-facebook social-icon"></i>
+                <span class="text-blue-700 mt-1">Facebook Page</span>
+            </a>
         </div>
 
         <!-- The container where the numbers will be displayed after ad view -->
