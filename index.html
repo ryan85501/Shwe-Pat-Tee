@@ -28,6 +28,22 @@
             text-align: center;
         }
 
+        /* Hide scrollbars for both WebKit (Chrome, Safari) and Firefox */
+        body::-webkit-scrollbar {
+            display: none;
+        }
+        body {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .overflow-y-auto::-webkit-scrollbar {
+            display: none;
+        }
+        .overflow-y-auto {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
         /* Container for the numbers to appear */
         .numbers-container {
             display: none; /* Initially hidden */
@@ -128,93 +144,267 @@
             font-size: 0.75rem; /* Smaller text size */
             margin-top: 0.25rem;
         }
+
+        /* Styling for the calendar button */
+        .calendar-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            background-color: transparent;
+            border-radius: 9999px; /* Make it a circle */
+            color: #2c3e50; /* Dark blue-gray */
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        }
+
+        .calendar-button:hover {
+            transform: scale(1.1);
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* New shining animation for a specific digit */
+        .shining-digit {
+            animation: shine 1.5s infinite;
+        }
+
+        @keyframes shine {
+            0% { color: #ffbf00; text-shadow: 0 0 5px #ffbf00; }
+            50% { color: #ffffa0; text-shadow: 0 0 10px #ffffa0; }
+            100% { color: #ffbf00; text-shadow: 0 0 5px #ffbf00; }
+        }
+        
+        /* New styles for the results container */
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative; /* Needed for absolute positioning of the result */
+        }
+        
+        /* Styles for each result row */
+        .results-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+        }
+
+        /* Styles for the number group on the left */
+        .number-group {
+            display: flex;
+            flex-direction: row;
+            gap: 0.5rem;
+        }
+        
+        /* Styles for the result group on the right */
+        .result-group {
+            position: absolute;
+            right: 1rem; /* Adjust as needed */
+            transition: top 0.3s ease-in-out;
+        }
+        
+        /* Styles for the digits selected for calculation */
+        .selected-digit {
+            background-color: #ffeb3b; /* A yellow highlight for selected digits */
+            border-radius: 5px;
+            padding: 0 2px;
+            animation: highlight-pulse 0.5s infinite alternate;
+        }
+        /* Animation for the highlight effect */
+        @keyframes highlight-pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        /* Styles for the new cute calculator buttons */
+        .calculator-buttons-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+        }
+
+        .cute-button {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.25rem;
+            font-weight: bold;
+            border-radius: 100%; /* Make them perfectly round */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .cute-button:hover {
+            transform: scale(1.1);
+        }
+
+        .cute-button:active {
+            transform: scale(0.95);
+        }
+        
+        /* Specific button colors */
+        .button-plus { background-color: #48bb78; }
+        .button-minus { background-color: #ed8936; }
+        .button-multiply { background-color: #4299e1; } /* Blue color for multiply */
+        .button-divide { background-color: #9f7aea; } /* Purple color for divide */
+        .button-equals { background-color: #4c51bf; }
+        .button-clear { background-color: #e53e3e; }
+        .button-back { background-color: #9ca3af; } /* Gray color for back button */
+
+
+        /* Styles for the dynamically added result element */
+        .result-number {
+            background-color: #fff59d; /* Soft yellow highlight */
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
     </style>
 </head>
-<body class="p-4 sm:p-8">
+<body class="p-4 sm:p-8 relative">
 
     <!-- Main Container -->
-    <div class="flex flex-col items-center w-full max-w-2xl mx-auto gap-4">
+    <div class="flex flex-col items-center w-full max-w-7xl mx-auto gap-4">
+        
+        <!-- Calendar Button -->
+        <button id="calendar-btn" class="calendar-button">
+            <i class="far fa-calendar-alt text-2xl sm:text-3xl"></i>
+        </button>
 
-        <!-- Header Section -->
-        <div class="text-center mb-4">
-            <div class="text-3xl font-bold mb-2">Date - <span id="current-date"></span></div>
-            <div class="text-xl font-medium text-gray-600">တစ်နေကုန်စာ</div>
-        </div>
-
-        <!-- Button Grid for the number categories -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full">
-            <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="mwe-ga-nan">
-                <span class="text-3xl">🍀</span>
-                <span class="text-base font-bold mt-1">မွေးဂဏန်း</span>
-            </button>
-            <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="one-kwet">
-                <span class="text-3xl">🎯</span>
-                <span class="text-base font-bold mt-1">တစ်ကွက်ကောင်း</span>
-            </button>
-            <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="shwe-pat-tee">
-                <span class="text-3xl">💰</span>
-                <span class="text-base font-bold mt-1">ရွှေပတ်သီး</span>
-            </button>
-            <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="not-broken">
-                <span class="text-3xl">🔑</span>
-                <span class="text-base font-bold mt-1">မထိမပေါက်ကီး</span>
-            </button>
-            <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="one-chain">
-                <span class="text-3xl">⛓️</span>
-                <span class="text-base font-bold mt-1">ဝမ်းချိန်း</span>
-            </button>
-            <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="punch">
-                <span class="text-3xl">💥</span>
-                <span class="text-base font-bold mt-1">ထိုးကွက်</span>
-            </button>
-
-            <!-- YouTube Channel Button -->
-            <a href="https://youtube.com/@2dshwepattee?si=KYIfOzw5lLajvCvE" target="_blank" class="social-button text-red-600" rel="noopener noreferrer">
-                <i class="fab fa-youtube social-icon"></i>
-                <span class="text-red-600 mt-1">YouTube Channel</span>
-            </a>
+        <!-- Main Lucky Numbers View -->
+        <div id="lucky-numbers-view" class="w-full flex flex-col items-center gap-4">
             
-            <!-- Facebook Page Button -->
-            <a href="https://www.facebook.com/share/17EGV6so5S/" target="_blank" class="social-button text-blue-600" rel="noopener noreferrer">
-                <i class="fab fa-facebook social-icon"></i>
-                <span class="text-blue-700 mt-1">Facebook Page</span>
-            </a>
-        </div>
+            <!-- Header Section -->
+            <div class="text-center mb-4">
+                <div class="text-3xl font-bold mb-2">Date - <span id="current-date"></span></div>
+                <div class="text-xl font-medium text-gray-600">တစ်နေကုန်စာ</div>
+            </div>
 
-        <!-- The container where the numbers will be displayed after ad view -->
-        <div id="numbers-display" class="numbers-container">
-            <div id="numbers-content" class="sub-numbers">
-                <!-- Numbers will be dynamically inserted here -->
+            <!-- Button Grid for the number categories -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full">
+                <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="mwe-ga-nan">
+                    <span class="text-3xl">🍀</span>
+                    <span class="text-base font-bold mt-1">မွေးဂဏန်း</span>
+                </button>
+                <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="one-kwet">
+                    <span class="text-3xl">🎯</span>
+                    <span class="text-base font-bold mt-1">တစ်ကွက်ကောင်း</span>
+                </button>
+                <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="shwe-pat-tee">
+                    <span class="text-3xl">💰</span>
+                    <span class="text-base font-bold mt-1">ရွှေပတ်သီး</span>
+                </button>
+                <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="not-broken">
+                    <span class="text-3xl">🔑</span>
+                    <span class="text-base font-bold mt-1">မထိမပေါက်ကီး</span>
+                </button>
+                <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="one-chain">
+                    <span class="text-3xl">⛓️</span>
+                    <span class="text-base font-bold mt-1">ဝမ်းချိန်း</span>
+                </button>
+                <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="punch">
+                    <span class="text-3xl">💥</span>
+                    <span class="text-base font-bold mt-1">ထိုးကွက်</span>
+                </button>
+
+                <!-- YouTube Channel Button -->
+                <a href="https://youtube.com/@2dshwepattee?si=KYIfOzw5lLajvCvE" target="_blank" class="social-button text-red-600" rel="noopener noreferrer">
+                    <i class="fab fa-youtube social-icon"></i>
+                    <span class="text-red-600 mt-1">YouTube Channel</span>
+                </a>
+                
+                <!-- Facebook Page Button -->
+                <a href="https://www.facebook.com/share/17EGV6so5S/" target="_blank" class="social-button text-blue-600" rel="noopener noreferrer">
+                    <i class="fab fa-facebook social-icon"></i>
+                    <span class="text-blue-700 mt-1">Facebook Page</span>
+                </a>
+            </div>
+
+            <!-- The container where the numbers will be displayed after ad view -->
+            <div id="numbers-display" class="numbers-container">
+                <div id="numbers-content" class="sub-numbers">
+                    <!-- Numbers will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <!-- Data storage for numbers, hidden from view -->
+            <div id="number-data" class="hidden">
+                <div data-id="mwe-ga-nan">90, 12, 34, 56, 78</div>
+                <div data-id="one-kwet">82</div>
+                <div data-id="shwe-pat-tee">8</div>
+                <div data-id="not-broken">7, 8, 9</div>
+                <div data-id="one-chain">1, 2</div>
+                <div data-id="punch">82, 83, 84</div>
+            </div>
+
+            <!-- 2D Results History Section -->
+            <div class="bg-white p-6 rounded-xl shadow-md w-full mt-8">
+                <div class="text-2xl font-bold mb-4 text-center text-gray-800">2D Results History</div>
+                <div class="overflow-x-auto">
+                    <table id="history-table" class="w-full text-center border-collapse">
+                        <thead>
+                            <tr class="text-gray-500 text-sm">
+                                <th class="py-2">Date</th>
+                                <th class="py-2">AM</th>
+                                <th class="py-2">PM</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body" class="text-lg font-medium text-gray-700">
+                            <!-- History rows will be dynamically inserted here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- Data storage for numbers, hidden from view -->
-        <div id="number-data" class="hidden">
-            <div data-id="mwe-ga-nan">90, 12, 34, 56, 78</div>
-            <div data-id="one-kwet">82</div>
-            <div data-id="shwe-pat-tee">8</div>
-            <div data-id="not-broken">7, 8, 9</div>
-            <div data-id="one-chain">1, 2</div>
-            <div data-id="punch">82, 83, 84</div>
-        </div>
-
-        <!-- 2D Results History Section -->
-        <div class="bg-white p-6 rounded-xl shadow-md w-full mt-8">
-            <div class="text-2xl font-bold mb-4 text-center text-gray-800">2D Results History</div>
-            <div class="overflow-x-auto">
-                <table id="history-table" class="w-full text-center border-collapse">
-                    <thead>
-                        <tr class="text-gray-500 text-sm">
-                            <th class="py-2">Date</th>
-                            <th class="py-2">AM</th>
-                            <th class="py-2">PM</th>
-                        </tr>
-                    </thead>
-                    <tbody id="history-table-body" class="text-lg font-medium text-gray-700">
-                        <!-- History rows will be dynamically inserted here -->
-                    </tbody>
-                </table>
+        <!-- Calendar View -->
+        <div id="calendar-view" class="w-full h-full flex flex-col items-center md:p-8 bg-white rounded-xl shadow-md gap-8" style="display: none;">
+            
+            <div class="w-full flex flex-col items-center">
+                <h2 class="text-3xl font-bold mb-4 text-center">Previous Results</h2>
+                <p class="text-gray-600 mb-4 text-center">Tap two digits and an operator to calculate the sum.</p>
+                <div id="previous-results-container" class="results-container w-full p-4 border rounded-lg">
+                    <!-- Results will be dynamically inserted here -->
+                </div>
+                
+                <!-- Back to Main button -->
+                <div class="flex justify-center gap-4 mt-4">
+                    <button id="back-to-main-btn" class="flex items-center justify-center gap-2 py-2 px-4 bg-gray-500 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-gray-600 transition-colors duration-300">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Main
+                    </button>
+                </div>
             </div>
+        </div>
+        
+        <!-- Cute Calculator Buttons, fixed position -->
+        <div id="calculator-panel" class="calculator-buttons-container" style="display: none;">
+            <button class="cute-button button-plus" data-value="+"><i class="fas fa-plus"></i></button>
+            <button class="cute-button button-minus" data-value="-"><i class="fas fa-minus"></i></button>
+            <button class="cute-button button-multiply" data-value="*"><i class="fas fa-times"></i></button>
+            <button class="cute-button button-divide" data-value="/"><i class="fas fa-divide"></i></button>
+            <button class="cute-button button-equals" data-value="=">=</button>
+            <button class="cute-button button-back" data-value="back"><i class="fas fa-arrow-left"></i></button>
+            <button class="cute-button button-clear" data-value="clear"><i class="fas fa-trash-alt"></i></button>
         </div>
     </div>
 
@@ -223,15 +413,40 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // View containers
+            const luckyNumbersView = document.getElementById('lucky-numbers-view');
+            const calendarView = document.getElementById('calendar-view');
+            // Buttons and panels
+            const calendarBtn = document.getElementById('calendar-btn');
+            const backToMainBtn = document.getElementById('back-to-main-btn');
+            const blockButtons = document.querySelectorAll('.button-block');
+            const calculatorPanel = document.getElementById('calculator-panel');
+            const calculatorButtons = calculatorPanel.querySelectorAll('.cute-button');
+            // Main content areas
+            const previousResultsContainer = document.getElementById('previous-results-container');
+            const numbersDisplayContainer = document.getElementById('numbers-display');
+            const numbersContent = document.getElementById('numbers-content');
+            
+            // Calculator state variables
+            let selectedDigits = [];
+            let operator = null;
 
             // History data structure to store results.
             let history = [
                 // Today's entry, now with the winning PM number and a highlight flag
-                { date: '08-25-2025', day: 'Monday', am: '16', pm: '78', highlight: true },
+                { date: '25-08-2025', day: 'Monday', am: '16', pm: '78', highlight: true },
                 { date: '22-08-2025', day: 'Friday', am: '74', pm: '99' },
                 { date: '21-08-2025', day: 'Thursday', am: '04', pm: '90' },
                 { date: '20-08-2025', day: 'Wednesday', am: '27', pm: '37' },
                 { date: '19-08-2025', day: 'Tuesday', am: '57', pm: '60' },
+            ];
+            
+            // Data for the calendar view from the provided image
+            const previousResults = [
+                '7855', '3727', '5097', '5050', '6483', '9540',
+                '9250', '5236', '7608', '9160', '8672', '6359',
+                '0572', '1137', '8478', '2520', '0519', '5760',
+                '2737', '0490', '7499', '1678'
             ];
 
             // Function to format the current date
@@ -249,14 +464,11 @@
                 document.getElementById('current-date').textContent = `${formatDate(date)} - ${dayOfWeek}`;
             };
 
-            // Get the HTML elements to update
-            const historyTableBody = document.getElementById('history-table-body');
-            const numbersDisplayContainer = document.getElementById('numbers-display');
-            const numbersContent = document.getElementById('numbers-content');
-            
             // Function to dynamically update the history table
             const updateHistoryTable = () => {
+                const historyTableBody = document.getElementById('history-table-body');
                 historyTableBody.innerHTML = ''; // Clear existing rows
+                
                 history.forEach(entry => {
                     const row = document.createElement('tr');
                     let pmContent = entry.pm;
@@ -280,7 +492,7 @@
                     historyTableBody.appendChild(row);
                 });
             };
-
+            
             // Function to show the content associated with a button
             const showContent = (button) => {
                 const targetId = button.dataset.target;
@@ -306,9 +518,149 @@
 
                 numbersDisplayContainer.classList.add('active');
             };
+            
+            // Function to populate the calendar view with the previous results
+            const populateCalendarView = () => {
+                previousResultsContainer.innerHTML = ''; // Clear existing content
+                
+                previousResults.forEach((numString, rowIndex) => {
+                    const resultsRow = document.createElement('div');
+                    resultsRow.className = 'results-row text-4xl font-bold font-serif';
+                    resultsRow.dataset.row = rowIndex; // Assign a data attribute to keep track of the row index
+                    
+                    const numberGroup = document.createElement('div');
+                    numberGroup.className = 'number-group';
+                    resultsRow.appendChild(numberGroup);
 
+                    // Split the string into individual digits
+                    const digits = numString.split('');
+
+                    digits.forEach(digit => {
+                        const span = document.createElement('span');
+                        span.textContent = digit;
+                        span.className = 'digit-span cursor-pointer p-1 rounded-md transition-colors duration-200 hover:bg-gray-200';
+                        
+                        // Check for the shining number and apply the special class
+                        if (numString === '1678' && digit === '8') {
+                            span.classList.add('shining-digit');
+                        }
+
+                        // Add event listener to each digit
+                        span.addEventListener('click', () => {
+                            // Find the index of the clicked element in the selectedDigits array
+                            const index = selectedDigits.findIndex(d => d.element === span);
+                            
+                            if (index > -1) {
+                                // If the digit is already selected, deselect it
+                                selectedDigits.splice(index, 1);
+                                span.classList.remove('selected-digit');
+                            } else if (selectedDigits.length < 2) {
+                                // If not selected and we have space, select it
+                                selectedDigits.push({ value: parseInt(digit), element: span, row: resultsRow });
+                                span.classList.add('selected-digit');
+                            }
+                        });
+
+                        numberGroup.appendChild(span);
+                    });
+                    
+                    previousResultsContainer.appendChild(resultsRow);
+                });
+            };
+
+            // Function to perform the calculation and display the result
+            const calculateResult = () => {
+                // Only proceed if two digits and an operator are selected
+                if (selectedDigits.length < 2 || !operator) {
+                    return;
+                }
+                
+                // Get the values
+                const firstDigit = selectedDigits[0].value;
+                const secondDigit = selectedDigits[1].value;
+                
+                let result = 0;
+                let calculationSuccess = true;
+
+                switch (operator) {
+                    case '+': result = firstDigit + secondDigit; break;
+                    case '-': result = firstDigit - secondDigit; break;
+                    case '*': result = firstDigit * secondDigit; break;
+                    case '/': 
+                        if (secondDigit === 0) {
+                            result = 'Error'; // Handle division by zero
+                            calculationSuccess = false;
+                        } else {
+                            result = firstDigit / secondDigit;
+                        }
+                        break;
+                }
+
+                // If the calculation was successful, get the last digit
+                if (calculationSuccess) {
+                    // Check if the result is a number before getting the last digit
+                    if (typeof result === 'number') {
+                        // Use Math.floor to get the integer part before getting the last digit
+                        result = Math.floor(Math.abs(result)) % 10;
+                    }
+                }
+
+                // Create the result element
+                const resultElement = document.createElement('div');
+                resultElement.className = 'result-group';
+                resultElement.innerHTML = `<span class="result-number">${result}</span>`;
+                
+                // Get the second selected row to position the result
+                const secondSelectedRow = selectedDigits[1].row;
+                const containerRect = previousResultsContainer.getBoundingClientRect();
+                const rowRect = secondSelectedRow.getBoundingClientRect();
+                
+                // Calculate the top position relative to the container
+                const topOffset = rowRect.top - containerRect.top;
+                
+                // Set the position and append to the container
+                resultElement.style.top = `${topOffset}px`;
+                previousResultsContainer.appendChild(resultElement);
+                
+                // Reset operator and selected digits for the next calculation
+                selectedDigits = [];
+                operator = null;
+            };
+
+            // Function to clear all highlights and results
+            const clearCalculation = () => {
+                // Remove all highlights
+                document.querySelectorAll('.selected-digit').forEach(el => {
+                    el.classList.remove('selected-digit');
+                });
+                // Remove all result elements
+                document.querySelectorAll('.result-group').forEach(el => {
+                    el.remove();
+                });
+                selectedDigits = [];
+                operator = null;
+            };
+
+            // Event listener for the calculator buttons
+            calculatorButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const value = button.dataset.value;
+                    
+                    if (value === 'clear') {
+                        clearCalculation();
+                    } else if (value === '=') {
+                        calculateResult();
+                    } else if (value === 'back') {
+                        // Trigger the click event on the back-to-main button
+                        backToMainBtn.click();
+                    } else {
+                        // It's an operator
+                        operator = value;
+                    }
+                });
+            });
+            
             // Handle button clicks on the block buttons
-            const blockButtons = document.querySelectorAll('.button-block');
             blockButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     // Hide any currently displayed numbers before showing a new set
@@ -333,6 +685,22 @@
                 });
             });
 
+            // Event listeners for view switching
+            calendarBtn.addEventListener('click', () => {
+                luckyNumbersView.style.display = 'none';
+                calendarView.style.display = 'block';
+                calculatorPanel.style.display = 'flex';
+                populateCalendarView();
+                clearCalculation(); // Ensure a clean state when switching to the calculator
+            });
+
+            backToMainBtn.addEventListener('click', () => {
+                calendarView.style.display = 'none';
+                calculatorPanel.style.display = 'none';
+                luckyNumbersView.style.display = 'flex';
+                clearCalculation(); // Clear state when leaving the calendar view
+            });
+            
             // Initial setup on page load
             updateCurrentDate();
             updateHistoryTable();
