@@ -1,107 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lucky Numbers</title>
+    <!-- Use Inter font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* General body and container styling */
+        /* General body styling with a soft, clean theme */
         body {
-            font-family: 'Comic Sans MS', 'Verdana', sans-serif;
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Soft light gray-blue background */
+            color: #2c3e50; /* Dark blue-gray text */
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            margin: 0;
-            background-color: #f0f4f8; /* Soft light gray-blue background */
-            color: #2c3e50;
-            min-height: 100vh;
             box-sizing: border-box;
             text-align: center;
         }
 
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 600px;
-            gap: 20px;
-        }
-
-        /* Styling for the cute, narrow button blocks */
-        .button-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .button-block {
-            background-color: #ffe6e6; /* Pastel pink */
-            color: #d35400; /* Dark orange for contrast */
-            font-size: 16px;
-            font-weight: bold;
-            padding: 15px 10px; /* Reduced padding for narrower look */
-            border-radius: 20px; /* More rounded corners for a cute feel */
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* A slightly different color for hover state */
-        .button-block:hover {
-            background-color: #fff0f0; 
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-
-        .button-block:active {
-            transform: scale(0.98);
-        }
-
-        .button-text {
-            line-height: 1.2;
-        }
-
-        .button-emoji {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-
-        /* Central container for the numbers to appear */
+        /* Container for the numbers to appear */
         .numbers-container {
-            width: 80%;
-            max-width: 300px;
-            background-color: #ffcccc; /* Soft red for the display box */
+            display: none; /* Initially hidden */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
             border-radius: 20px;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            background-color: #ffcccc; /* Soft red for the display box */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             animation: fadeIn 0.5s ease-in-out;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-            z-index: 10;
+            margin-top: 20px;
         }
 
+        /* Active state to show the container */
         .numbers-container.active {
             display: flex;
         }
 
+        /* Fade-in animation for the container */
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.8); }
             to { opacity: 1; transform: scale(1); }
         }
 
+        /* Styling for the numbers inside the container */
         .sub-numbers {
             font-size: 32px;
             font-weight: bold;
@@ -109,108 +61,80 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
             color: #c0392b; /* A darker red for numbers */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* New flashing animation for the numbers */
+        .flashing-number {
+            animation: flash-animation 1.5s infinite alternate;
+        }
+
+        @keyframes flash-animation {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
         }
         
-        /* Header styling */
-        .header-section {
-            font-size: 24px;
-            margin-bottom: 10px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-        }
-
-        .header-section div:first-child {
-            font-weight: bold;
-            font-size: 30px;
-        }
-
-        /* History styling */
-        .history-container {
-            background-color: transparent;
-            padding: 20px;
-            border-radius: 10px;
-            width: 100%;
-            text-align: left;
-            color: #555555;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        }
-
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .history-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
+        /* History table styling */
         .history-table th, .history-table td {
             padding: 10px 0;
-            border-bottom: 1px solid #dcdcdc;
+            border-bottom: 1px solid #dcdcdc; /* Light gray border */
         }
-
         .history-table tbody tr:last-child td {
             border-bottom: none;
         }
-
-        .history-date {
-            font-weight: normal;
-        }
-
-        .am-pm-number {
+        
+        /* New styling for the highlighted winning row */
+        .highlighted-row {
+            background-color: #ffeff2; /* Soft pink background */
             font-weight: bold;
-            margin: 0 5px;
+            border-left: 5px solid #d35400; /* Dark orange line on the left */
         }
 
-        .am { color: #e74c3c; }
-        .pm { color: #3498db; }
-
-        .history-table td:nth-child(1) { width: 45%; }
-        .history-table td:nth-child(2), .history-table td:nth-child(3) { text-align: center; }
-
+        /* New styling for the winning digit */
+        .highlighted-digit {
+            color: #ffbf00; /* Bright gold color */
+            font-size: 1.2em; /* Slightly larger font size */
+        }
     </style>
 </head>
-<body>
+<body class="p-4 sm:p-8">
 
-    <div class="main-container">
-        
+    <!-- Main Container -->
+    <div class="flex flex-col items-center w-full max-w-2xl mx-auto gap-4">
+
         <!-- Header Section -->
-        <div class="header-section">
-            <div>Date - <span id="current-date"></span></div>
-            <div>တစ်နေကုန်စာ</div>
+        <div class="text-center mb-4">
+            <div class="text-3xl font-bold mb-2">Date - <span id="current-date"></span></div>
+            <div class="text-xl font-medium text-gray-600">တစ်နေကုန်စာ</div>
         </div>
 
-        <!-- Button grid for the number categories -->
-        <div class="button-grid">
-            <button class="button-block" data-target="mwe-ga-nan">
-                <span class="button-emoji">🍀</span>
-                <span class="button-text">မွေးဂဏန်း</span>
+        <!-- Button Grid for the number categories -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full">
+            <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="mwe-ga-nan">
+                <span class="text-3xl">🍀</span>
+                <span class="text-base font-bold mt-1">မွေးဂဏန်း</span>
             </button>
-            <button class="button-block" data-target="one-kwet">
-                <span class="button-emoji">🎯</span>
-                <span class="button-text">တစ်ကွက်ကောင်း</span>
+            <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="one-kwet">
+                <span class="text-3xl">🎯</span>
+                <span class="text-base font-bold mt-1">တစ်ကွက်ကောင်း</span>
             </button>
-            <button class="button-block" data-target="shwe-pat-tee">
-                <span class="button-emoji">💰</span>
-                <span class="button-text">ရွှေပတ်သီး</span>
+            <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="shwe-pat-tee">
+                <span class="text-3xl">💰</span>
+                <span class="text-base font-bold mt-1">ရွှေပတ်သီး</span>
             </button>
-            <button class="button-block" data-target="not-broken">
-                <span class="button-emoji">🔑</span>
-                <span class="button-text">မထိမပေါက်ကီး</span>
+            <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="not-broken">
+                <span class="text-3xl">🔑</span>
+                <span class="text-base font-bold mt-1">မထိမပေါက်ကီး</span>
             </button>
-            <button class="button-block" data-target="one-chain">
-                <span class="button-emoji">⛓️</span>
-                <span class="button-text">ဝမ်းချိန်း</span>
+            <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="one-chain">
+                <span class="text-3xl">⛓️</span>
+                <span class="text-base font-bold mt-1">ဝမ်းချိန်း</span>
             </button>
-            <button class="button-block" data-target="punch">
-                <span class="button-emoji">💥</span>
-                <span class="button-text">ထိုးကွက်</span>
+            <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="punch">
+                <span class="text-3xl">💥</span>
+                <span class="text-base font-bold mt-1">ထိုးကွက်</span>
             </button>
         </div>
 
@@ -220,87 +144,112 @@
                 <!-- Numbers will be dynamically inserted here -->
             </div>
         </div>
-        
+
         <!-- Data storage for numbers, hidden from view -->
-        <div style="display: none;">
-            <div id="mwe-ga-nan-numbers">90, 12, 34, 56, 78</div>
-            <div id="one-kwet-numbers">82</div>
-            <div id="shwe-pat-tee-numbers">8</div>
-            <div id="not-broken-numbers">7, 8, 9</div>
-            <div id="one-chain-numbers">1, 2</div>
-            <div id="punch-numbers">82, 83, 84</div>
+        <div id="number-data" class="hidden">
+            <div data-id="mwe-ga-nan">90, 12, 34, 56, 78</div>
+            <div data-id="one-kwet">82</div>
+            <div data-id="shwe-pat-tee">8</div>
+            <div data-id="not-broken">7, 8, 9</div>
+            <div data-id="one-chain">1, 2</div>
+            <div data-id="punch">82, 83, 84</div>
         </div>
 
         <!-- 2D Results History Section -->
-        <div class="history-container">
-            <div class="history-header">
-                <span>2D Results History</span>
-                <span>&#x21BB;</span>
+        <div class="bg-white p-6 rounded-xl shadow-md w-full mt-8">
+            <div class="text-2xl font-bold mb-4 text-center text-gray-800">2D Results History</div>
+            <div class="overflow-x-auto">
+                <table id="history-table" class="w-full text-center border-collapse">
+                    <thead>
+                        <tr class="text-gray-500 text-sm">
+                            <th class="py-2">Date</th>
+                            <th class="py-2">AM</th>
+                            <th class="py-2">PM</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body" class="text-lg font-medium text-gray-700">
+                        <!-- History rows will be dynamically inserted here -->
+                    </tbody>
+                </table>
             </div>
-            <table class="history-table">
-                <tbody id="history-table-body">
-                    <!-- History rows will be inserted here by JavaScript -->
-                </tbody>
-            </table>
         </div>
-
     </div>
 
-    <!-- START OF NEW AD CODE FROM libtl.com -->
+    <!-- Ad script to load the ad network SDK -->
     <script src='//libtl.com/sdk.js' data-zone='9748985' data-sdk='show_9748985'></script>
-    <!-- END OF NEW AD CODE -->
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            
+
             // History data structure to store results.
             let history = [
-                { date: '08-25-2025', day: 'Monday', am: '16', pm: '--' }, // New history entry from your image
+                // Today's entry, now with the winning PM number and a highlight flag
+                { date: '08-25-2025', day: 'Monday', am: '16', pm: '78', highlight: true },
                 { date: '22-08-2025', day: 'Friday', am: '74', pm: '99' },
                 { date: '21-08-2025', day: 'Thursday', am: '04', pm: '90' },
                 { date: '20-08-2025', day: 'Wednesday', am: '27', pm: '37' },
-                { date: '19-08-2025', day: 'Tuesday', am: '57', pm: '60' }
+                { date: '19-08-2025', day: 'Tuesday', am: '57', pm: '60' },
             ];
 
             // Function to format the current date
-            function formatDate(date) {
-                const day = date.getDate().toString().padStart(2, '0');
-                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const formatDate = (date) => {
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
                 const year = date.getFullYear();
                 return `${day}-${month}-${year}`;
-            }
+            };
 
-            // Function to update the date display
-            function updateCurrentDate() {
+            // Function to update the current date and day of the week
+            const updateCurrentDate = () => {
                 const date = new Date();
                 const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
                 document.getElementById('current-date').textContent = `${formatDate(date)} - ${dayOfWeek}`;
-            }
-            updateCurrentDate();
-            
+            };
+
+            // Get the HTML elements to update
             const historyTableBody = document.getElementById('history-table-body');
             const numbersDisplayContainer = document.getElementById('numbers-display');
             const numbersContent = document.getElementById('numbers-content');
             
             // Function to dynamically update the history table
-            function updateHistoryTable() {
-                historyTableBody.innerHTML = '';
+            const updateHistoryTable = () => {
+                historyTableBody.innerHTML = ''; // Clear existing rows
                 history.forEach(entry => {
                     const row = document.createElement('tr');
+                    let pmContent = entry.pm;
+                    let rowClasses = '';
+
+                    // Check if the entry should be highlighted
+                    if (entry.highlight) {
+                        rowClasses = 'highlighted-row';
+                        // Add special highlighting for the number '8' if it's the winning number
+                        if (pmContent === '78') {
+                            pmContent = `7<span class="highlighted-digit">8</span>`;
+                        }
+                    }
+
+                    row.className = rowClasses;
                     row.innerHTML = `
-                        <td><span class="history-date">${entry.date} - ${entry.day}</span></td>
-                        <td><span class="am-pm-number am">${entry.am}</span> (AM)</td>
-                        <td><span class="am-pm-number pm">${entry.pm}</span> (PM)</td>
+                        <td class="py-2">${entry.date}</td>
+                        <td class="py-2 text-red-500 font-bold">${entry.am}</td>
+                        <td class="py-2 text-blue-500 font-bold">${pmContent}</td>
                     `;
                     historyTableBody.appendChild(row);
                 });
-            }
+            };
 
             // Function to show the content associated with a button
             const showContent = (button) => {
                 const targetId = button.dataset.target;
-                const numbersSourceId = `${targetId}-numbers`;
-                const numbersText = document.getElementById(numbersSourceId).textContent;
+                const numbersSourceElement = document.querySelector(`#number-data div[data-id="${targetId}"]`);
+                
+                if (!numbersSourceElement) {
+                    console.error('Numbers not found for target:', targetId);
+                    return;
+                }
+
+                // Split the text content into an array of numbers
+                const numbersText = numbersSourceElement.textContent;
                 const numbersArray = numbersText.split(',').map(s => s.trim());
 
                 numbersContent.innerHTML = ''; // Clear existing content
@@ -308,7 +257,7 @@
                 numbersArray.forEach(num => {
                     const span = document.createElement('span');
                     span.textContent = num;
-                    span.className = 'flashing-number';
+                    span.className = 'flashing-number px-2';
                     numbersContent.appendChild(span);
                 });
 
@@ -317,32 +266,34 @@
 
             // Handle button clicks on the block buttons
             const blockButtons = document.querySelectorAll('.button-block');
-            
             blockButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     // Hide any currently displayed numbers before showing a new set
                     numbersDisplayContainer.classList.remove('active');
 
-                    // Check if the ad function is available.
+                    // Check if the ad function is available from the external script.
                     if (typeof show_9748985 === 'function') {
+                        // Attempt to show the rewarded ad.
                         show_9748985('pop').then(() => {
+                            // This code runs after the ad has been successfully shown.
                             console.log('User has been rewarded.');
-                            showContent(button);
+                            showContent(button); // Now show the content
                         }).catch(error => {
+                            // This code runs if the ad fails to load or show.
                             console.error('Ad failed to show:', error);
-                            showContent(button);
+                            showContent(button); // Show the content anyway to avoid a bad user experience.
                         });
                     } else {
-                        console.error('Ad function show_9748985 not available.');
-                        showContent(button);
+                        console.error('Ad function show_9748985 not available. Falling back to direct content display.');
+                        showContent(button); // Fallback: show the content directly if the ad fails
                     }
                 });
             });
 
-            // Start the history display loop
+            // Initial setup on page load
+            updateCurrentDate();
             updateHistoryTable();
         });
     </script>
-
 </body>
 </html>
