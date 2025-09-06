@@ -169,6 +169,17 @@
         .shining-digit {
             animation: shine 1.5s infinite;
         }
+        
+        /* New styles for the popping and shining digit */
+        .popping-gold-digit {
+            animation: pop-shine 1.5s infinite alternate;
+        }
+
+        @keyframes pop-shine {
+            0% { transform: scale(1); color: #ffbf00; text-shadow: 0 0 5px #ffbf00; }
+            50% { transform: scale(1.2); color: #ffffa0; text-shadow: 0 0 10px #ffffa0; }
+            100% { transform: scale(1); color: #ffbf00; text-shadow: 0 0 5px #ffbf00; }
+        }
 
         @keyframes shine {
             0% { color: #ffbf00; text-shadow: 0 0 5px #ffbf00; }
@@ -433,7 +444,7 @@
 
             // History data structure to store results.
             let history = [
-                { date: '05-09-2025', day: 'Friday', am: '26', pm: '07' },
+                { date: '05-09-2025', day: 'Friday', am: '26', pm: '07', highlight: true },
                 { date: '04-09-2025', day: 'Thursday', am: '22', pm: '53' },
                 { date: '03-09-2025', day: 'Wednesday', am: '67', pm: '17' },
                 { date: '02-09-2025', day: 'Tuesday', am: '47', pm: '84' },
@@ -490,6 +501,11 @@
                         if (pmContent === '78') {
                             pmContent = `7<span class="highlighted-digit">8</span>`;
                         }
+                    }
+
+                    // New logic to make the '0' from '07' shine and pop
+                    if (entry.date === '05-09-2025' && entry.pm === '07') {
+                        pmContent = `<span class="popping-gold-digit">0</span>7`;
                     }
 
                     row.className = rowClasses;
@@ -552,6 +568,11 @@
                         // Check for the shining number and apply the special class
                         if (numString === '1678' && digit === '8') {
                             span.classList.add('shining-digit');
+                        }
+
+                        // New logic to make the '0' from '2607' shine and pop
+                        if (numString === '2607' && digit === '0') {
+                            span.classList.add('popping-gold-digit');
                         }
 
                         // Add event listener to each digit
@@ -717,5 +738,3 @@
     </script>
 </body>
 </html>
-
-
