@@ -113,6 +113,17 @@
             color: #ffbf00; /* Bright gold color */
             font-size: 1.2em; /* Slightly larger font size */
         }
+        
+        /* New styles for the popping and shining digit */
+        .popping-gold-digit {
+            animation: pop-shine 1.5s infinite alternate;
+        }
+
+        @keyframes pop-shine {
+            0% { transform: scale(1); color: #ffbf00; text-shadow: 0 0 5px #ffbf00; }
+            50% { transform: scale(1.2); color: #ffffa0; text-shadow: 0 0 10px #ffffa0; }
+            100% { transform: scale(1); color: #ffbf00; text-shadow: 0 0 5px #ffbf00; }
+        }
 
         /* New styling for the YouTube button, now smaller and transparent */
         .social-button {
@@ -170,17 +181,6 @@
             animation: shine 1.5s infinite;
         }
         
-        /* New styles for the popping and shining digit */
-        .popping-gold-digit {
-            animation: pop-shine 1.5s infinite alternate;
-        }
-
-        @keyframes pop-shine {
-            0% { transform: scale(1); color: #ffbf00; text-shadow: 0 0 5px #ffbf00; }
-            50% { transform: scale(1.2); color: #ffffa0; text-shadow: 0 0 10px #ffffa0; }
-            100% { transform: scale(1); color: #ffbf00; text-shadow: 0 0 5px #ffbf00; }
-        }
-
         @keyframes shine {
             0% { color: #ffbf00; text-shadow: 0 0 5px #ffbf00; }
             50% { color: #ffffa0; text-shadow: 0 0 10px #ffffa0; }
@@ -290,6 +290,16 @@
         }
         
     </style>
+    <!-- Ad script to load the ad network SDK -->
+    <!-- The script below is the correct one from the ad network's docs -->
+    <script src="https://richinfo.co/richpartners/telegram/js/tg-ob.js"></script>
+    <script>
+        window.TelegramAdsController = new TelegramAdsController();
+        window.TelegramAdsController.initialize({
+            pubId: "985714",
+            appId: "3631",
+        });
+    </script>
 </head>
 <body class="p-4 sm:p-8 relative">
 
@@ -418,9 +428,6 @@
             <button class="cute-button button-clear" data-value="clear"><i class="fas fa-trash-alt"></i></button>
         </div>
     </div>
-
-    <!-- Ad script to load the ad network SDK -->
-    <script src='//libtl.com/sdk.js' data-zone='9748985' data-sdk='show_9748985'></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -569,7 +576,7 @@
                         if (numString === '1678' && digit === '8') {
                             span.classList.add('shining-digit');
                         }
-
+                        
                         // New logic to make the '0' from '2607' shine and pop
                         if (numString === '2607' && digit === '0') {
                             span.classList.add('popping-gold-digit');
@@ -696,21 +703,20 @@
                     // Hide any currently displayed numbers before showing a new set
                     numbersDisplayContainer.classList.remove('active');
 
-                    // Check if the ad function is available from the external script.
-                    if (typeof show_9748985 === 'function') {
-                        // Attempt to show the rewarded ad.
-                        show_9748985('pop').then(() => {
-                            // This code runs after the ad has been successfully shown.
-                            console.log('User has been rewarded.');
-                            showContent(button); // Now show the content
+                    // Check if the ad function exists and call it
+                    if (window.TelegramAdsController && typeof window.TelegramAdsController.showAd === 'function') {
+                        window.TelegramAdsController.showAd().then(() => {
+                            // On successful ad display, show the content
+                            showContent(button);
                         }).catch(error => {
-                            // This code runs if the ad fails to load or show.
+                            // If ad fails, log the error and show content anyway
                             console.error('Ad failed to show:', error);
-                            showContent(button); // Show the content anyway to avoid a bad user experience.
+                            showContent(button);
                         });
                     } else {
-                        console.error('Ad function show_9748985 not available. Falling back to direct content display.');
-                        showContent(button); // Fallback: show the content directly if the ad fails
+                        // Fallback: show the content directly if the ad function is not available
+                        console.error('Ad function showAd not available. Falling back to direct content display.');
+                        showContent(button);
                     }
                 });
             });
