@@ -669,30 +669,19 @@
                 });
             });
             
-            // Handle button clicks on the block buttons
-            blockButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    // Hide any currently displayed numbers before showing a new set
-                    numbersDisplayContainer.classList.remove('active');
+          // Handle button clicks on the block buttons
+blockButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        // Ask Android app to show AdMob rewarded ad
+        if (typeof Android !== "undefined" && Android.triggerRewardAd) {
+            Android.triggerRewardAd();
+        } else {
+            // Fallback for browser testing
+            showContentFromApp();
+        }
+    });
+});
 
-                    // Check if the ad function is available from the external script.
-                    if (typeof show_9748985 === 'function') {
-                        // Attempt to show the rewarded ad.
-                        show_9748985('pop').then(() => {
-                            // This code runs after the ad has been successfully shown.
-                            console.log('User has been rewarded.');
-                            showContent(button); // Now show the content
-                        }).catch(error => {
-                            // This code runs if the ad fails to load or show.
-                            console.error('Ad failed to show:', error);
-                            showContent(button); // Show the content anyway to avoid a bad user experience.
-                        });
-                    } else {
-                        console.error('Ad function show_9748985 not available. Falling back to direct content display.');
-                        showContent(button); // Fallback: show the content directly if the ad fails
-                    }
-                });
-            });
 
             // Event listeners for view switching
             calendarBtn.addEventListener('click', () => {
@@ -738,5 +727,6 @@
 
 </body>
 </html>
+
 
 
