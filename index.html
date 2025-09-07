@@ -716,30 +716,5 @@ function showContentFromApp() {
             updateHistoryTable();
         });
     </script>
-    <script>
-    // Called after AdMob ad finishes
-    function showContentFromApp() {
-        const numbersDisplayContainer = document.getElementById('numbers-display');
-        numbersDisplayContainer.classList.add('active');
-        console.log("Content unlocked by AdMob");
-    }
-
-    // Button click → ask Android to show rewarded ad
-    document.querySelectorAll('.button-block').forEach(button => {
-        button.addEventListener('click', () => {
-            if (typeof Android !== "undefined" && Android.triggerRewardAd) {
-                Android.triggerRewardAd(); // call Kotlin
-            } else {
-                // fallback for browser
-                showContentFromApp();
-            }
-        });
-    });
-</script>
-
 </body>
 </html>
-
-
-
-
