@@ -669,18 +669,30 @@
                 });
             });
             
-          // Handle button clicks on the block buttons
+          let lastClickedButton = null; // store last clicked button
+
+// Handle button clicks
 blockButtons.forEach(button => {
     button.addEventListener('click', () => {
-        // Ask Android app to show AdMob rewarded ad
+        lastClickedButton = button; // save which button was clicked
         if (typeof Android !== "undefined" && Android.triggerRewardAd) {
-            Android.triggerRewardAd();
+            Android.triggerRewardAd();  // ask Kotlin to show AdMob ad
         } else {
-            // Fallback for browser testing
-            showContentFromApp();
+            // fallback for browser
+            showContent(button);
         }
     });
 });
+
+// Called from Android after ad completes
+function showContentFromApp() {
+    if (lastClickedButton) {
+        showContent(lastClickedButton); // now display numbers for that button
+    } else {
+        console.error("No button clicked before ad finished.");
+    }
+}
+
 
 
             // Event listeners for view switching
@@ -727,6 +739,7 @@ blockButtons.forEach(button => {
 
 </body>
 </html>
+
 
 
 
