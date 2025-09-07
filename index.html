@@ -113,17 +113,6 @@
             color: #ffbf00; /* Bright gold color */
             font-size: 1.2em; /* Slightly larger font size */
         }
-        
-        /* New styles for the popping and shining digit */
-        .popping-gold-digit {
-            animation: pop-shine 1.5s infinite alternate;
-        }
-
-        @keyframes pop-shine {
-            0% { transform: scale(1); color: #ffbf00; text-shadow: 0 0 5px #ffbf00; }
-            50% { transform: scale(1.2); color: #ffffa0; text-shadow: 0 0 10px #ffffa0; }
-            100% { transform: scale(1); color: #ffbf00; text-shadow: 0 0 5px #ffbf00; }
-        }
 
         /* New styling for the YouTube button, now smaller and transparent */
         .social-button {
@@ -180,7 +169,7 @@
         .shining-digit {
             animation: shine 1.5s infinite;
         }
-        
+
         @keyframes shine {
             0% { color: #ffbf00; text-shadow: 0 0 5px #ffbf00; }
             50% { color: #ffffa0; text-shadow: 0 0 10px #ffffa0; }
@@ -348,12 +337,6 @@
                     <i class="fab fa-facebook social-icon"></i>
                     <span class="text-blue-700 mt-1">Facebook Page</span>
                 </a>
-                
-                <!-- Support Me Button -->
-                <a href="https://otieu.com/4/5427102" target="_blank" class="social-button text-pink-500" rel="noopener noreferrer">
-                    <i class="fas fa-heart social-icon"></i>
-                    <span class="text-pink-500 mt-1">Support Me</span>
-                </a>
             </div>
 
             <!-- The container where the numbers will be displayed after ad view -->
@@ -424,6 +407,9 @@
             <button class="cute-button button-clear" data-value="clear"><i class="fas fa-trash-alt"></i></button>
         </div>
     </div>
+
+    <!-- Ad script to load the ad network SDK -->
+    <script src='//libtl.com/sdk.js' data-zone='9748985' data-sdk='show_9748985'></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -447,7 +433,7 @@
 
             // History data structure to store results.
             let history = [
-                { date: '05-09-2025', day: 'Friday', am: '26', pm: '07', highlight: true },
+                { date: '05-09-2025', day: 'Friday', am: '26', pm: '07' },
                 { date: '04-09-2025', day: 'Thursday', am: '22', pm: '53' },
                 { date: '03-09-2025', day: 'Wednesday', am: '67', pm: '17' },
                 { date: '02-09-2025', day: 'Tuesday', am: '47', pm: '84' },
@@ -504,11 +490,6 @@
                         if (pmContent === '78') {
                             pmContent = `7<span class="highlighted-digit">8</span>`;
                         }
-                    }
-
-                    // New logic to make the '0' from '07' shine and pop
-                    if (entry.date === '05-09-2025' && entry.pm === '07') {
-                        pmContent = `<span class="popping-gold-digit">0</span>7`;
                     }
 
                     row.className = rowClasses;
@@ -571,11 +552,6 @@
                         // Check for the shining number and apply the special class
                         if (numString === '1678' && digit === '8') {
                             span.classList.add('shining-digit');
-                        }
-                        
-                        // New logic to make the '0' from '2607' shine and pop
-                        if (numString === '2607' && digit === '0') {
-                            span.classList.add('popping-gold-digit');
                         }
 
                         // Add event listener to each digit
@@ -692,76 +668,39 @@
                     }
                 });
             });
-
-            // --- Ad Integration Logic ---
-
-            // Simulated functions to mimic ad network SDKs
-            const showRewardedAd = () => {
-                return new Promise((resolve, reject) => {
-                    // Simulate a random ad success/failure
-                    if (Math.random() > 0.3) {
-                        console.log('Rewarded ad loaded and shown successfully.');
-                        resolve(); // Ad was successful
-                    } else {
-                        console.log('Rewarded ad failed to load or show.');
-                        reject(); // Ad failed
-                    }
-                });
-            };
-
-            const showInterstitialAd = () => {
-                return new Promise((resolve, reject) => {
-                    // Simulate a random ad success/failure
-                    if (Math.random() > 0.2) {
-                        console.log('Interstitial ad loaded and shown successfully.');
-                        resolve(); // Ad was successful
-                    } else {
-                        console.log('Interstitial ad failed to load or show.');
-                        reject(); // Ad failed
-                    }
-                });
-            };
-
-            // Handle button clicks on the block buttons with a rewarded ad
+            
+            // Handle button clicks on the block buttons
             blockButtons.forEach(button => {
                 button.addEventListener('click', () => {
-                    // Attempt to show the rewarded ad first
-                    showRewardedAd()
-                        .then(() => {
-                            // If ad is successful, show the content
-                            numbersDisplayContainer.classList.remove('active');
-                            showContent(button);
-                        })
-                        .catch(() => {
-                            // If ad fails, show the content as a fallback
-                            console.log('Ad not shown. Falling back to direct content display.');
-                            numbersDisplayContainer.classList.remove('active');
-                            showContent(button);
+                    // Hide any currently displayed numbers before showing a new set
+                    numbersDisplayContainer.classList.remove('active');
+
+                    // Check if the ad function is available from the external script.
+                    if (typeof show_9748985 === 'function') {
+                        // Attempt to show the rewarded ad.
+                        show_9748985('pop').then(() => {
+                            // This code runs after the ad has been successfully shown.
+                            console.log('User has been rewarded.');
+                            showContent(button); // Now show the content
+                        }).catch(error => {
+                            // This code runs if the ad fails to load or show.
+                            console.error('Ad failed to show:', error);
+                            showContent(button); // Show the content anyway to avoid a bad user experience.
                         });
+                    } else {
+                        console.error('Ad function show_9748985 not available. Falling back to direct content display.');
+                        showContent(button); // Fallback: show the content directly if the ad fails
+                    }
                 });
             });
 
-            // Event listener for view switching with an interstitial ad
+            // Event listeners for view switching
             calendarBtn.addEventListener('click', () => {
-                // Attempt to show the interstitial ad before switching the view
-                showInterstitialAd()
-                    .then(() => {
-                        // If ad is successful, switch the view
-                        luckyNumbersView.style.display = 'none';
-                        calendarView.style.display = 'block';
-                        calculatorPanel.style.display = 'flex';
-                        populateCalendarView();
-                        clearCalculation();
-                    })
-                    .catch(() => {
-                        // If ad fails, switch the view as a fallback
-                        console.log('Ad not shown. Falling back to direct view switch.');
-                        luckyNumbersView.style.display = 'none';
-                        calendarView.style.display = 'block';
-                        calculatorPanel.style.display = 'flex';
-                        populateCalendarView();
-                        clearCalculation();
-                    });
+                luckyNumbersView.style.display = 'none';
+                calendarView.style.display = 'block';
+                calculatorPanel.style.display = 'flex';
+                populateCalendarView();
+                clearCalculation(); // Ensure a clean state when switching to the calculator
             });
 
             backToMainBtn.addEventListener('click', () => {
@@ -778,3 +717,4 @@
     </script>
 </body>
 </html>
+
