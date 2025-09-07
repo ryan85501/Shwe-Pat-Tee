@@ -693,65 +693,57 @@
                 });
             });
 
-            // --- Ad Integration Logic ---
+           // --- Ad Integration Logic for Android WebView ---
 
-            // Simulated functions to mimic ad network SDKs
-            const showRewardedAd = () => {
-                return new Promise((resolve, reject) => {
-                    // Simulate a random ad success/failure
-                    if (Math.random() > 0.3) {
-                        console.log('Rewarded ad loaded and shown successfully.');
-                        resolve(); // Ad was successful
-                    } else {
-                        console.log('Rewarded ad failed to load or show.');
-                        reject(); // Ad failed
-                    }
-                });
-            };
+            // Function to show the content associated with a button
+            const showContent = (button) => {
+                const targetId = button.dataset.target;
+                const numbersSourceElement = document.querySelector(`#number-data div[data-id="${targetId}"]`);
+                
+                if (!numbersSourceElement) {
+                    console.error('Numbers not found for target:', targetId);
+                    return;
+                }
 
-            const showInterstitialAd = () => {
-                return new Promise((resolve, reject) => {
-                    // Simulate a random ad success/failure
-                    if (Math.random() > 0.2) {
-                        console.log('Interstitial ad loaded and shown successfully.');
-                        resolve(); // Ad was successful
-                    } else {
-                        console.log('Interstitial ad failed to load or show.');
-                        reject(); // Ad failed
-                    }
+                const numbersText = numbersSourceElement.textContent;
+                const numbersArray = numbersText.split(',').map(s => s.trim());
+
+                numbersContent.innerHTML = '';
+                
+                numbersArray.forEach(num => {
+                    const span = document.createElement('span');
+                    span.textContent = num;
+                    span.className = 'flashing-number px-2';
+                    numbersContent.appendChild(span);
                 });
+
+                numbersDisplayContainer.classList.add('active');
             };
 
             // Handle button clicks on the block buttons with a rewarded ad
             blockButtons.forEach(button => {
                 button.addEventListener('click', () => {
-                    // Attempt to show the rewarded ad first
-                    showRewardedAd()
-                        .then(() => {
-                            // If ad is successful, show the content
-                            numbersDisplayContainer.classList.remove('active');
-                            showContent(button);
-                        })
-                        .catch(() => {
-                            // If ad fails, show the content as a fallback
-                            console.log('Ad not shown. Falling back to direct content display.');
-                            numbersDisplayContainer.classList.remove('active');
-                            showContent(button);
-                        });
+                    // Check if the native Android interface exists and call it
+                    if (window.Android && window.Android.showRewardedAd) {
+                        window.Android.showRewardedAd();
+                    }
+                    numbersDisplayContainer.classList.remove('active');
+                    showContent(button);
                 });
             });
 
             // Event listener for view switching with an interstitial ad
             calendarBtn.addEventListener('click', () => {
-                // Attempt to show the interstitial ad before switching the view
-                showInterstitialAd()
-                    .then(() => {
-                        // If ad is successful, switch the view
-                        luckyNumbersView.style.display = 'none';
-                        calendarView.style.display = 'block';
-                        calculatorPanel.style.display = 'flex';
-                        populateCalendarView();
-                        clearCalculation();
+                // Check if the native Android interface exists and call it
+                if (window.Android && window.Android.showInterstitialAd) {
+                    window.Android.showInterstitialAd();
+                }
+                luckyNumbersView.style.display = 'none';
+                calendarView.style.display = 'block';
+                calculatorPanel.style.display = 'flex';
+                populateCalendarView();
+                clearCalculation();
+            });
                     })
                     .catch(() => {
                         // If ad fails, switch the view as a fallback
@@ -778,3 +770,4 @@
     </script>
 </body>
 </html>
+
