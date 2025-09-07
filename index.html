@@ -669,23 +669,24 @@
                 });
             });
             
-            // This function is called from the Android app after the ad finishes.
-            window.showContentFromApp = () => {
-                if (lastClickedButton) {
-                    showContent(lastClickedButton);
+            // This function is now called from the Android app after the ad finishes.
+            window.showContentFromApp = (buttonId) => {
+                const button = document.querySelector(`.button-block[data-target="${buttonId}"]`);
+                if (button) {
+                    showContent(button);
                 } else {
-                    console.error("No button was clicked before the ad finished.");
+                    console.error("Button not found with ID:", buttonId);
                 }
             };
 
             // Handle button clicks
             blockButtons.forEach(button => {
                 button.addEventListener('click', () => {
-                    lastClickedButton = button; // Save which button was clicked
+                    const buttonId = button.dataset.target;
                     if (typeof Android !== "undefined" && Android.triggerRewardAd) {
-                        Android.triggerRewardAd();  // Ask Kotlin to show the AdMob ad
+                        Android.triggerRewardAd(buttonId);  // Pass buttonId to Kotlin
                     } else {
-                        // Fallback for browser (show content directly without ad)
+                        // Fallback for browser
                         showContent(button);
                     }
                 });
