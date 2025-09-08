@@ -476,27 +476,28 @@
                 
                 history.forEach(entry => {
                     const row = document.createElement('tr');
+                    let amContent = entry.am;
                     let pmContent = entry.pm;
                     let rowClasses = '';
 
                     // Check if the entry should be highlighted
-if (entry.highlight) {
-    rowClasses = 'highlighted-row';
+                    if (entry.highlight) {
+                        rowClasses = 'highlighted-row';
 
-    // Highlight specific digits based on the winning number
-    if (pmContent === '16') {
-        pmContent = `<span class="shining-digit">1</span>6`;
-    } else if (pmContent === '07') {
-        pmContent = `<span class="shining-digit">0</span>7`;
-    } else if (amContent === '78') {
-        amContent = `7<span class="shining-digit">8</span>`;
-    }
-}
+                        // Highlight specific digits based on the winning number
+                        if (pmContent === '16') {
+                            pmContent = `<span class="shining-digit">1</span>6`;
+                        } else if (pmContent === '07') {
+                            pmContent = `<span class="shining-digit">0</span>7`;
+                        } else if (amContent === '78') {
+                            amContent = `<span class="shining-digit">7</span>8`;
+                        }
+                    }
 
                     row.className = rowClasses;
                     row.innerHTML = `
                         <td class="py-2">${entry.date}</td>
-                        <td class="py-2 text-red-500 font-bold">${entry.am}</td>
+                        <td class="py-2 text-red-500 font-bold">${amContent}</td>
                         <td class="py-2 text-blue-500 font-bold">${pmContent}</td>
                     `;
                     historyTableBody.appendChild(row);
@@ -716,8 +717,3 @@ if (entry.highlight) {
     </script>
 </body>
 </html>
-
-
-
-
-
