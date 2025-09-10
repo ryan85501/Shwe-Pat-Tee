@@ -274,7 +274,14 @@
             font-weight: bold;
             color: #2c3e50;
         }
-        
+
+        /* Styling for the video container - now for social buttons */
+        .social-buttons-container {
+            display: flex;
+            flex-direction: column; /* Stack them vertically */
+            gap: 1.5rem; /* Add space between them */
+            margin: 2rem 0; /* Margin around the container */
+        }
     </style>
 </head>
 <body class="p-4 sm:p-8 relative">
@@ -317,13 +324,15 @@
                     <span class="text-3xl">💥</span>
                     <span class="text-base font-bold mt-1">ထိုးကွက်</span>
                 </button>
+            </div>
 
-                <a href="https://youtube.com/@2dshwepattee?si=KYIfOzw5lLajvCvE" target="_blank" class="social-button text-red-600" rel="noopener noreferrer">
+            <div class="social-buttons-container flex-col sm:flex-row flex-wrap justify-center items-center">
+                <a href="https://www.youtube.com/@2dshwepattee?si=KYIfOzw5lLajvCvE" target="_blank" onclick="openExternalUrl(this.href); return false;" class="social-button text-red-600" rel="noopener noreferrer">
                     <i class="fab fa-youtube social-icon"></i>
                     <span class="text-red-600 mt-1">YouTube Channel</span>
                 </a>
-                
-                <a href="https://www.facebook.com/share/17EGV6so5S/" target="_blank" class="social-button text-blue-600" rel="noopener noreferrer">
+
+                <a href="https://www.facebook.com/share/1QxT8tKtjh/" target="_blank" onclick="openExternalUrl(this.href); return false;" class="social-button text-blue-600" rel="noopener noreferrer">
                     <i class="fab fa-facebook social-icon"></i>
                     <span class="text-blue-700 mt-1">Facebook Page</span>
                 </a>
@@ -343,7 +352,7 @@
                 <div data-id="punch">39, 30, 32, 35,36</div>
             </div> 
 
-                <div class="mt-4 text-center">
+            <div class="mt-4 text-center">
                 <p class="text-xl font-semibold text-red-800 popping-text">Wave Account - 09777662003</p>
             </div>
 
@@ -394,6 +403,16 @@
     </div>
     
     <script>
+        // Function to handle opening external links
+        function openExternalUrl(url) {
+            if (typeof Android !== "undefined" && Android.openExternalLink) {
+                Android.openExternalLink(url);
+            } else {
+                // Fallback for web browsers
+                window.open(url, '_blank');
+            }
+        }
+        
         document.addEventListener('DOMContentLoaded', () => {
             // View containers
             const luckyNumbersView = document.getElementById('lucky-numbers-view');
