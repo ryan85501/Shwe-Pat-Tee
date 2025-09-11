@@ -663,6 +663,20 @@
                 liveResultValueText.textContent = data.value;
                 liveResultContent.style.display = 'block';
                 liveResultSubText.textContent = '';
+                
+                const now = new Date();
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+
+                // 12:01 PM → AM result
+                 if (hours === 12 && minutes === 1) {
+                updateHistoryAndCalendar('am', data.live_result);
+    }
+
+                 // 4:30 PM → PM result
+               if (hours === 16 && minutes === 30) {
+             updateHistoryAndCalendar('pm', data.live_result);
+    }
             };
             
             const updateHistoryAndCalendar = (period, result) => {
@@ -960,6 +974,7 @@
     </script>
 </body>
 </html>
+
 
 
 
