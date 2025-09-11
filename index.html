@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE: html>
 <html lang="my">
 <head>
     <meta charset="UTF-8">
@@ -278,9 +278,122 @@
         /* Styling for the video container - now for social buttons */
         .social-buttons-container {
             display: flex;
-            flex-direction: row; /* Stack them horizontally */
+            flex-direction: row; /* Changed to row for horizontal layout */
             gap: 1.5rem; /* Add space between them */
             margin: 2rem 0; /* Margin around the container */
+        }
+        
+        /* Styles for the 2D live result container - CUTE VERSION */
+        .live-result-container {
+            position: relative;
+            background-image: linear-gradient(to bottom, #ffebee, #ffcdd2); /* Soft red gradient */
+            padding: 2rem 1.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 320px; /* Make it a bit more compact */
+            text-align: center;
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .live-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .live-result-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #d32f2f; /* Dark red title */
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .cute-icon {
+            font-size: 1.5rem;
+            color: #e57373; /* A lighter red for the icon */
+            animation: heart-beat 1s infinite;
+        }
+
+        @keyframes heart-beat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .live-result-number {
+            font-size: 5rem; /* Larger font size */
+            font-weight: 900; /* Extra bold font weight */
+            color: #d32f2f;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: pulse 2s infinite; /* Slower pulsing animation */
+            transition: all 0.3s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .live-result-sub-text {
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .live-result-details {
+            display: flex;
+            justify-content: space-around; /* Space out the items */
+            width: 100%;
+            margin-top: 1rem;
+            gap: 1rem;
+        }
+
+        .live-result-detail-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 0.75rem 1.25rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .live-result-detail-label {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.875rem;
+        }
+
+        .live-result-detail-value {
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: #d32f2f;
+            margin-top: 0.25rem;
+        }
+        
+        /* New styles for the loading spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #d35400;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -296,7 +409,7 @@
             
             <div class="text-center mb-4">
                 <div class="text-3xl font-bold mb-2">Date - <span id="current-date"></span></div>
-                <div class="text-xl font-medium text-gray-600">4:30 PM</div>
+                <div class="text-xl font-medium text-gray-600">All DAY</div>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full">
@@ -345,17 +458,37 @@
 
             <div id="number-data" class="hidden">
                 <div data-id="mwe-ga-nan">20, 24, 80, 46, 86</div>
-                <div data-id="one-kwet">39</div>
-                <div data-id="shwe-pat-tee">3</div>
-                <div data-id="not-broken">2, 3, 4</div>
-                <div data-id="one-chain">7, 8</div>
-                <div data-id="punch">39, 30, 32, 35,36</div>
+                <div data-id="one-kwet">--</div>
+                <div data-id="shwe-pat-tee">-</div>
+                <div data-id="not-broken">6, 5, 4</div>
+                <div data-id="one-chain">4, 5</div>
+                <div data-id="punch">--, --, --, --,--</div>
             </div> 
 
             <div class="mt-4 text-center">
                 <p class="text-xl font-semibold text-red-800 popping-text">Wave Account - 09777662003</p>
             </div>
-
+            
+            <div id="live-result" class="live-result-container">
+                <div class="live-result-header">
+                    <div class="live-result-title">2D Live Result</div>
+                    <i class="fas fa-heart cute-icon"></i>
+                </div>
+                <div id="live-result-content">
+                    <div id="live-result-number" class="live-result-number">--</div>
+                    <div class="live-result-details">
+                        <div class="live-result-detail-item">
+                            <span class="live-result-detail-label">SET</span>
+                            <span id="set-result-value" class="live-result-detail-value">--</span>
+                        </div>
+                        <div class="live-result-detail-item">
+                            <span class="live-result-detail-label">VALUE</span>
+                            <span id="live-result-value-text" class="live-result-detail-value">--</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="live-result-sub-text" class="live-result-sub-text">Loading...</div>
+            </div>
             <div class="bg-white p-6 rounded-xl shadow-md w-full mt-8">
                 <div class="text-2xl font-bold mb-4 text-center text-gray-800">2D Results History</div>
                 <div class="overflow-x-auto">
@@ -428,14 +561,24 @@
             const numbersDisplayContainer = document.getElementById('numbers-display');
             const numbersContent = document.getElementById('numbers-content');
             
+            // New elements for live results
+            const liveResultContent = document.getElementById('live-result-content');
+            const liveResultNumber = document.getElementById('live-result-number');
+            const liveResultSubText = document.getElementById('live-result-sub-text');
+            const setResultValue = document.getElementById('set-result-value');
+            const liveResultValueText = document.getElementById('live-result-value-text');
+            
+
             // Calculator state variables
             let selectedDigits = [];
             let operator = null;
 
             // Global variable to store the last clicked button
             let lastClickedButton = null;
-         
-
+            
+            // Variables to hold static results
+            let amResult = null;
+            let pmResult = null;
 
             // History data structure to store results.
             let history = [
@@ -461,6 +604,89 @@
                 '0172', '9065', '7886', '4784', '6717', '2253', '2607',
                 '5216', '1684', '8752' 
             ];
+
+            // Function to fetch and display live 2D result
+            const fetchLiveResult = async () => {
+                const now = new Date();
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+
+                // Check if the current time is within the static period
+                const isStaticTime = (hours >= 16 && minutes >= 30) || (hours < 11 || (hours === 11 && minutes < 30));
+
+                if (isStaticTime) {
+                    liveResultContent.style.display = 'block';
+                    liveResultSubText.textContent = 'Results are static from 4:30 PM until 11:30 AM the next day.';
+                    return;
+                }
+
+                const apiUrl = 'https://set-scraper-server.onrender.com/get_set_data';
+
+                try {
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    
+                    if (data && data.live_result && data.set_result && data.value) {
+                        updateLiveResultDisplay(data);
+                    } else {
+                        updateLiveResultDisplay({
+                            live_result: 'N/A',
+                            set_result: '--',
+                            value: '--'
+                        });
+                        liveResultSubText.textContent = 'Data not available';
+                    }
+                } catch (error) {
+                    console.error('Error fetching live data:', error);
+                    updateLiveResultDisplay({
+                        live_result: 'N/A',
+                        set_result: '--',
+                        value: '--'
+                    });
+                    liveResultSubText.textContent = 'Error fetching data';
+                }
+            };
+            
+            const updateLiveResultDisplay = (data) => {
+                liveResultNumber.textContent = data.live_result;
+                setResultValue.textContent = data.set_result;
+                liveResultValueText.textContent = data.value;
+                liveResultContent.style.display = 'block';
+                liveResultSubText.textContent = '';
+            };
+            
+            const updateHistoryAndCalendar = (period, result) => {
+                const now = new Date();
+                const currentDate = formatDate(now);
+                
+                let todayEntry = history.find(e => e.date === currentDate);
+                if (!todayEntry) {
+                    todayEntry = {
+                        date: currentDate,
+                        day: now.toLocaleDateString('en-US', { weekday: 'long' }),
+                        am: '--',
+                        pm: '--'
+                    };
+                    history.unshift(todayEntry); // Add to the beginning of the history
+                }
+
+                if (period === 'am') {
+                    todayEntry.am = result;
+                } else if (period === 'pm') {
+                    todayEntry.pm = result;
+                }
+
+                previousResults.push(result);
+                updateHistoryTable();
+                populateCalendarView();
+            };
+
+            // Fetch live result on page load and every second
+            fetchLiveResult();
+            setInterval(fetchLiveResult, 1000);
 
             // Function to format the current date
             const formatDate = (date) => {
@@ -723,14 +949,7 @@
             // Initial setup on page load
             updateCurrentDate();
             updateHistoryTable();
-      
-
         });
     </script>
-
 </body>
 </html>
-
-
-
-
