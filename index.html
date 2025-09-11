@@ -476,6 +476,11 @@
                 </div>
                 <div id="live-result-content">
                     <div id="live-result-number" class="live-result-number">--</div>
+
+                    <div class="live-result-detail-item">
+               <span class="live-result-detail-label">TIME</span>
+               <span id="live-result-time" class="live-result-detail-value">--</span>
+               </div>
                     <div class="live-result-details">
                         <div class="live-result-detail-item">
                             <span class="live-result-detail-label">SET</span>
@@ -630,13 +635,14 @@
                     }
                     const data = await response.json();
                     
-                    if (data && data.live_result && data.set_result && data.value) {
+                    if (data && data.live_result && data.set_result && data.value && data.time) {
                         updateLiveResultDisplay(data);
                     } else {
                         updateLiveResultDisplay({
                             live_result: 'N/A',
                             set_result: '--',
                             value: '--'
+                            time: '--'
                         });
                         liveResultSubText.textContent = 'Data not available';
                     }
@@ -954,5 +960,6 @@
     </script>
 </body>
 </html>
+
 
 
