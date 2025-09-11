@@ -641,7 +641,7 @@
                         updateLiveResultDisplay({
                             live_result: 'N/A',
                             set_result: '--',
-                            value: '--'
+                            value: '--' ,
                             time: '--'
                         });
                         liveResultSubText.textContent = 'Data not available';
@@ -658,6 +658,8 @@
             };
             
             const updateLiveResultDisplay = (data) => {
+                document.getElementById("live-result-time").textContent = data.time || '--';
+
                 liveResultNumber.textContent = data.live_result;
                 setResultValue.textContent = data.set_result;
                 liveResultValueText.textContent = data.value;
@@ -700,7 +702,8 @@
                     todayEntry.pm = result;
                 }
 
-                previousResults.push(result);
+                previousResults.unshift(result);
+
                 updateHistoryTable();
                 populateCalendarView();
             };
@@ -974,6 +977,7 @@
     </script>
 </body>
 </html>
+
 
 
 
