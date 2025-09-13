@@ -688,32 +688,7 @@
     }
             };
             
-            const updateHistoryAndCalendar = (period, result) => {
-                const now = new Date();
-                const currentDate = formatDate(now);
-                
-                let todayEntry = history.find(e => e.date === currentDate);
-                if (!todayEntry) {
-                    todayEntry = {
-                        date: currentDate,
-                        day: now.toLocaleDateString('en-US', { weekday: 'long' }),
-                        am: '--',
-                        pm: '--'
-                    };
-                    history.unshift(todayEntry); // Add to the beginning of the history
-                }
-
-                if (period === 'am') {
-                    todayEntry.am = result;
-                } else if (period === 'pm') {
-                    todayEntry.pm = result;
-                }
-
-                previousResults.unshift(result);
-
-                updateHistoryTable();
-                populateCalendarView();
-            };
+            
 
             // Fetch live result on page load and every second
             fetchLiveResult();
@@ -727,12 +702,8 @@
                 return `${day}-${month}-${year}`;
             };
 
-            // Function to update the current date and day of the week
-            const updateCurrentDate = () => {
-                const date = new Date();
-                const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
-                document.getElementById('current-date').textContent = `${formatDate(date)} - ${dayOfWeek}`;
-            };
+            
+           
 
             // Function to dynamically update the history table
             const updateHistoryTable = () => {
@@ -980,127 +951,14 @@
                 clearCalculation(); // Clear state when leaving the calendar view
             });
             
-            // Initial setup on page load
-            updateCurrentDate();
-            updateHistoryTable();
-        });
+           
 
 
-           // Function to update numbers at 8 PM (Mon–Fri)
-const autoUpdateAt8PM = async () => {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const day = now.getDay(); // Sunday = 0, Monday = 1, ... Saturday = 6
-
-    // Run only at exactly 20:00 (8 PM) Monday–Friday
-    if (hours === 20 && minutes === 0 && day >= 1 && day <= 5) {
-        try {
-            // Fetch latest set data
-            const response = await fetch('https://set-scraper-server.onrender.com/get_set_data');
-            if (!response.ok) throw new Error("Failed to fetch set data");
-            const data = await response.json();
-
-            if (!data.set_result) return;
-
-            let setResult = data.set_result.replace(/,/g, ""); // Remove commas
-            let [integerPart, decimalPart] = setResult.split(".");
-
-            // --- Formula for ဝမ်းချိန် (One Chain) ---
-            if (decimalPart && decimalPart.length >= 2) {
-                let d1 = parseInt(decimalPart[decimalPart.length - 2]);
-                let d2 = parseInt(decimalPart[decimalPart.length - 1]);
-                let sum = d1 + d2;
-                let result1 = sum; 
-                let result2 = sum - 1;
-
-                document.querySelector('div[data-id="one-chain"]').textContent = `${result2}, ${result1}`;
-            }
-
-            // --- Formula for ရွှေကီး (Not Broken) ---
-            if (integerPart.length >= 2) {
-                let d1 = parseInt(integerPart[integerPart.length - 2]);
-                let d2 = parseInt(integerPart[integerPart.length - 1]);
-                let sum = d1 + d2;
-                let lastDigit = sum % 10;
-                let results = [lastDigit - 1, lastDigit, lastDigit + 1];
-                document.querySelector('div[data-id="not-broken"]').textContent = results.join(", ");
-            }
-
-            // --- Clear other sections (so you can update manually) ---
-            document.querySelector('div[data-id="mwe-ga-nan"]').textContent = "";
-            document.querySelector('div[data-id="one-kwet"]').textContent = "";
-            document.querySelector('div[data-id="shwe-pat-tee"]').textContent = "";
-            document.querySelector('div[data-id="punch"]').textContent = "";
-
-            // --- Update Date to Next Day (skip weekends) ---
-            let nextDate = new Date(now);
-            nextDate.setDate(now.getDate() + 1);
-            if (nextDate.getDay() === 6) nextDate.setDate(nextDate.getDate() + 2); // Saturday → Monday
-            if (nextDate.getDay() === 0) nextDate.setDate(nextDate.getDate() + 1); // Sunday → Monday
-
-            const formatDate = (date) => {
-                const day = String(date.getDate()).padStart(2, '0');
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const year = date.getFullYear();
-                return `${day}-${month}-${year}`;
-            };
-
-            document.getElementById('current-date').textContent =
-                `${formatDate(nextDate)} - ${nextDate.toLocaleDateString('en-US', { weekday: 'long' })}`;
-
-        } catch (error) {
-            console.error("Error in 8PM auto-update:", error);
-        }
-    }
-};
-
-// Run every minute to check time
-setInterval(autoUpdateAt8PM, 60000);
-
-        // Sunday 5PM Update (မွေးဂဏန်း)
-    // ==============================
-    const autoUpdateSunday5PM = () => {
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const day = now.getDay(); // Sunday = 0
-
-        if (hours === 17 && minutes === 0 && day === 0) {
-            try {
-                // Get Friday PM result from history
-                const fridayEntry = history.find(entry =>
-                    new Date(entry.date.split('-').reverse().join('-')).getDay() === 5
-                );
-
-                if (!fridayEntry || !fridayEntry.pm) return;
-                const pmResult = fridayEntry.pm; // Example "25"
-
-                const firstDigit = parseInt(pmResult[0]);
-                const secondDigit = parseInt(pmResult[1]);
-
-                // First digit series (0,2,4,6,8)
-                const firstSeries = [0, 2, 4, 6, 8];
-                // Second digit series (1,3,5,7,9)
-                const secondSeries = [1, 3, 5, 7, 9];
-
-                const mweGaNanResults = firstSeries.map((n, i) => {
-                    let d1 = (firstDigit + n) % 10;
-                    let d2 = (secondDigit + secondSeries[i]) % 10;
-                    return `${d1}${d2}`;
-                });
-
-                document.querySelector('div[data-id="mwe-ga-nan"]').textContent = mweGaNanResults.join(", ");
-            } catch (error) {
-                console.error("Error in Sunday 5PM update:", error);
-            }
-        }
-    };
-
-setInterval(autoUpdateSunday5PM, 60000);
+       
     </script>
 </body>
 </html>
+
 
 
 
