@@ -1,20 +1,20 @@
-<!DOCTYPE: html>
+<!DOCTYPE html>
 <html lang="my">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucky Numbers</title>
+    <title>Lucky Numbers - Focused Celebration Effects</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* General body styling with a soft, clean theme */
+        /* Your original CSS remains unchanged */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8; /* Soft light gray-blue background */
-            color: #2c3e50; /* Dark blue-gray text */
+            background-color: #f0f4f8;
+            color: #2c3e50;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -25,48 +25,43 @@
             text-align: center;
         }
 
-        /* Hide scrollbars for both WebKit (Chrome, Safari) and Firefox */
         body::-webkit-scrollbar {
             display: none;
         }
         body {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
         .overflow-y-auto::-webkit-scrollbar {
             display: none;
         }
         .overflow-y-auto {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        /* Container for the numbers to appear */
         .numbers-container {
-            display: none; /* Initially hidden */
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
             border-radius: 20px;
-            background-color: #ffcccc; /* Soft red for the display box */
+            background-color: #ffcccc;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             animation: fadeIn 0.5s ease-in-out;
             margin-top: 20px;
         }
 
-        /* Active state to show the container */
         .numbers-container.active {
             display: flex;
         }
 
-        /* Fade-in animation for the container */
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.8); }
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* Styling for the numbers inside the container */
         .sub-numbers {
             font-size: 32px;
             font-weight: bold;
@@ -74,11 +69,10 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
-            color: #c0392b; /* A darker red for numbers */
+            color: #c0392b;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
 
-        /* New flashing animation for the numbers */
         .flashing-number {
             animation: flash-animation 1.5s infinite alternate;
         }
@@ -89,60 +83,54 @@
             100% { opacity: 1; transform: scale(1); }
         }
         
-        /* History table styling */
         .history-table th, .history-table td {
             padding: 10px 0;
-            border-bottom: 1px solid #dcdcdc; /* Light gray border */
+            border-bottom: 1px solid #dcdcdc;
         }
         .history-table tbody tr:last-child td {
             border-bottom: none;
         }
         
-        /* New styling for the highlighted winning row */
         .highlighted-row {
-            background-color: #ffeff2; /* Soft pink background */
+            background-color: #ffeff2;
             font-weight: bold;
-            border-left: 5px solid #d35400; /* Dark orange line on the left */
+            border-left: 5px solid #d35400;
         }
 
-        /* New styling for the winning digit */
         .highlighted-digit {
-            color: #ffbf00; /* Bright gold color */
-            font-size: 1.2em; /* Slightly larger font size */
+            color: #ffbf00;
+            font-size: 1.2em;
         }
 
-        /* New styling for the YouTube button, now smaller and transparent */
         .social-button {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            background-color: transparent; /* Changed to transparent */
-            padding: 0.5rem; /* Reduced padding */
+            background-color: transparent;
+            padding: 0.5rem;
             border-radius: 1rem;
-            box-shadow: none; /* Removed shadow for a lighter look */
+            box-shadow: none;
             transition: all 0.3s ease-in-out;
             transform: scale(1);
         }
         .social-button:hover {
-            background-color: transparent; /* Also transparent on hover */
+            background-color: transparent;
             transform: scale(1.05);
         }
         .social-button:active {
             transform: scale(0.98);
         }
 
-        /* Adjust icon and text size for the smaller button */
         .social-button .social-icon {
-            font-size: 2rem; /* Smaller icon size */
+            font-size: 2rem;
         }
         .social-button .mt-1 {
-            font-size: 0.75rem; /* Smaller text size */
+            font-size: 0.75rem;
             margin-top: 0.25rem;
         }
 
-        /* Styling for the calendar button */
         .calendar-button {
             position: absolute;
             top: 1rem;
@@ -152,8 +140,8 @@
             justify-content: center;
             padding: 0.5rem;
             background-color: transparent;
-            border-radius: 9999px; /* Make it a circle */
-            color: #2c3e50; /* Dark blue-gray */
+            border-radius: 9999px;
+            color: #2c3e50;
             transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
         }
 
@@ -162,7 +150,6 @@
             background-color: rgba(0, 0, 0, 0.05);
         }
 
-        /* New shining animation for a specific digit */
         .shining-digit {
             animation: shine 1.5s infinite;
         }
@@ -173,15 +160,13 @@
             100% { color: #ffbf00; text-shadow: 0 0 5px #ffbf00; }
         }
         
-        /* New styles for the results container */
         .results-container {
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            position: relative; /* Needed for absolute positioning of the result */
+            position: relative;
         }
         
-        /* Styles for each result row */
         .results-row {
             display: flex;
             align-items: center;
@@ -189,34 +174,30 @@
             width: 100%;
         }
 
-        /* Styles for the number group on the left */
         .number-group {
             display: flex;
             flex-direction: row;
             gap: 0.5rem;
         }
         
-        /* Styles for the result group on the right */
         .result-group {
             position: absolute;
-            right: 1rem; /* Adjust as needed */
+            right: 1rem;
             transition: top 0.3s ease-in-out;
         }
         
-        /* Styles for the digits selected for calculation */
         .selected-digit {
-            background-color: #ffeb3b; /* A yellow highlight for selected digits */
+            background-color: #ffeb3b;
             border-radius: 5px;
             padding: 0 2px;
             animation: highlight-pulse 0.5s infinite alternate;
         }
-        /* Animation for the highlight effect */
+        
         @keyframes highlight-pulse {
             0% { transform: scale(1); opacity: 1; }
             100% { transform: scale(1.05); opacity: 0.8; }
         }
 
-        /* Styles for the new cute calculator buttons */
         .calculator-buttons-container {
             position: fixed;
             bottom: 20px;
@@ -239,7 +220,7 @@
             align-items: center;
             font-size: 1.25rem;
             font-weight: bold;
-            border-radius: 100%; /* Make them perfectly round */
+            border-radius: 100%;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: all 0.2s ease-in-out;
             cursor: pointer;
@@ -254,19 +235,16 @@
             transform: scale(0.95);
         }
         
-        /* Specific button colors */
         .button-plus { background-color: #48bb78; }
         .button-minus { background-color: #ed8936; }
-        .button-multiply { background-color: #4299e1; } /* Blue color for multiply */
-        .button-divide { background-color: #9f7aea; } /* Purple color for divide */
+        .button-multiply { background-color: #4299e1; }
+        .button-divide { background-color: #9f7aea; }
         .button-equals { background-color: #4c51bf; }
         .button-clear { background-color: #e53e3e; }
-        .button-back { background-color: #9ca3af; } /* Gray color for back button */
+        .button-back { background-color: #9ca3af; }
 
-
-        /* Styles for the dynamically added result element */
         .result-number {
-            background-color: #fff59d; /* Soft yellow highlight */
+            background-color: #fff59d;
             padding: 0.5rem 1rem;
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -275,28 +253,27 @@
             color: #2c3e50;
         }
 
-        /* Styling for the video container - now for social buttons */
         .social-buttons-container {
             display: flex;
-            flex-direction: row; /* Changed to row for horizontal layout */
-            gap: 1.5rem; /* Add space between them */
-            margin: 2rem 0; /* Margin around the container */
+            flex-direction: row;
+            gap: 1.5rem;
+            margin: 2rem 0;
         }
         
-        /* Styles for the 2D live result container - CUTE VERSION */
         .live-result-container {
             position: relative;
-            background-image: linear-gradient(to bottom, #ffebee, #ffcdd2); /* Soft red gradient */
+            background-image: linear-gradient(to bottom, #ffebee, #ffcdd2);
             padding: 2rem 1.5rem;
             border-radius: 2rem;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 320px; /* Make it a bit more compact */
+            max-width: 320px;
             text-align: center;
             margin-top: 2rem;
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow: hidden;
         }
         
         .live-result-header {
@@ -310,14 +287,14 @@
         .live-result-title {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #d32f2f; /* Dark red title */
+            color: #d32f2f;
             margin: 0;
             flex-grow: 1;
         }
 
         .cute-icon {
             font-size: 1.5rem;
-            color: #e57373; /* A lighter red for the icon */
+            color: #e57373;
             animation: heart-beat 1s infinite;
         }
 
@@ -328,12 +305,12 @@
         }
         
         .live-result-number {
-            font-size: 5rem; /* Larger font size */
-            font-weight: 900; /* Extra bold font weight */
+            font-size: 5rem;
+            font-weight: 900;
             color: #d32f2f;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
             position: relative;
-            animation: pulse 2s infinite; /* Slower pulsing animation */
+            animation: pulse 2s infinite;
             transition: all 0.3s ease-in-out;
         }
 
@@ -351,7 +328,7 @@
 
         .live-result-details {
             display: flex;
-            justify-content: space-around; /* Space out the items */
+            justify-content: space-around;
             width: 100%;
             margin-top: 1rem;
             gap: 1rem;
@@ -380,7 +357,6 @@
             margin-top: 0.25rem;
         }
         
-        /* New styles for the loading spinner */
         .spinner {
             border: 4px solid rgba(0, 0, 0, 0.1);
             border-left-color: #d35400;
@@ -394,6 +370,64 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        
+        /* Hide the API status element */
+        #api-status {
+            display: none !important;
+        }
+        
+        /* Subtle celebration effects only for the live result container */
+        .live-celebration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            overflow: hidden;
+        }
+        
+        .celebration-emoji {
+            position: absolute;
+            font-size: 1.5rem;
+            z-index: 10;
+            animation: celebration-float 4s forwards;
+            opacity: 0;
+        }
+        
+        @keyframes celebration-float {
+            0% {
+                transform: translateY(0) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-80px) translateX(20px) scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        .winning-glow {
+            animation: winning-glow-animation 2s infinite;
+        }
+        
+        @keyframes winning-glow-animation {
+            0% {
+                box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            }
+            100% {
+                box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            }
         }
     </style>
 </head>
@@ -439,8 +473,6 @@
                 </button>
             </div>
 
-           
-
             <div id="numbers-display" class="numbers-container">
                 <div id="numbers-content" class="sub-numbers">
                     </div>
@@ -455,9 +487,13 @@
                 <div data-id="punch">64, 25, 26, 86</div>
             </div> 
 
-           
+            <!-- API Status Indicator (hidden) -->
+            <div id="api-status" class="api-status" style="display: none;"></div>
             
             <div id="live-result" class="live-result-container">
+                <!-- Celebration container for emojis -->
+                <div id="celebration-container" class="live-celebration"></div>
+                
                 <div class="live-result-header">
                     <div class="live-result-title">2D Live Result</div>
                     <i class="fas fa-heart cute-icon"></i>
@@ -558,6 +594,61 @@
             }
         }
         
+        // Celebration emojis
+        const celebrationEmojis = ['🎉', '🎊', '🥳', '🎁', '✨', '💫', '👏', '👍', '🏆', '⭐'];
+        
+        // Function to create subtle celebration effects only in the live result container
+        function createLiveResultCelebration() {
+            const celebrationContainer = document.getElementById('celebration-container');
+            celebrationContainer.innerHTML = '';
+            
+            // Add a golden glow to the live result container
+            const liveResultContainer = document.getElementById('live-result');
+            liveResultContainer.classList.add('winning-glow');
+            
+            // Add a few emojis (not too many to avoid crowding)
+            for (let i = 0; i < 5; i++) {
+                const emoji = document.createElement('div');
+                emoji.className = 'celebration-emoji';
+                emoji.textContent = celebrationEmojis[Math.floor(Math.random() * celebrationEmojis.length)];
+                emoji.style.left = `${20 + (i * 15)}%`;
+                emoji.style.animationDelay = `${i * 0.2}s`;
+                celebrationContainer.appendChild(emoji);
+            }
+            
+            // Remove the glow after 3 seconds
+            setTimeout(() => {
+                liveResultContainer.classList.remove('winning-glow');
+            }, 3000);
+        }
+        
+        // Function to check if live result matches any numbers
+        function checkForMatches(liveResult) {
+            // Get numbers from data elements
+            const shwePatTee = document.querySelector('[data-id="shwe-pat-tee"]').textContent.trim();
+            const mweGaNan = document.querySelector('[data-id="mwe-ga-nan"]').textContent.split(',').map(num => num.trim());
+            const punch = document.querySelector('[data-id="punch"]').textContent.split(',').map(num => num.trim());
+            
+            let hasMatch = false;
+            
+            // Check if live result contains shwe-pat-tee number (2)
+            if (liveResult.includes(shwePatTee)) {
+                hasMatch = true;
+            }
+            
+            // Check if live result matches any mwe-ga-nan numbers
+            if (mweGaNan.includes(liveResult)) {
+                hasMatch = true;
+            }
+            
+            // Check if live result matches any punch numbers
+            if (punch.includes(liveResult)) {
+                hasMatch = true;
+            }
+            
+            return hasMatch;
+        }
+        
         document.addEventListener('DOMContentLoaded', () => {
             // View containers
             const luckyNumbersView = document.getElementById('lucky-numbers-view');
@@ -572,6 +663,7 @@
             const previousResultsContainer = document.getElementById('previous-results-container');
             const numbersDisplayContainer = document.getElementById('numbers-display');
             const numbersContent = document.getElementById('numbers-content');
+            const apiStatus = document.getElementById('api-status');
             
             // New elements for live results
             const liveResultContent = document.getElementById('live-result-content');
@@ -579,7 +671,7 @@
             const liveResultSubText = document.getElementById('live-result-sub-text');
             const setResultValue = document.getElementById('set-result-value');
             const liveResultValueText = document.getElementById('live-result-value-text');
-            
+            const liveResultTime = document.getElementById('live-result-time');
 
             // Calculator state variables
             let selectedDigits = [];
@@ -601,9 +693,6 @@
                 { date: '09-09-2025', day: 'Tuesday', am: '16', pm: '84' , highlight: true },
                 { date: '08-09-2025', day: 'Monday', am: '52', pm: '16' , highlight: true },
                
-                
-                
-               
             ];
             
             // Data for the calendar view from the provided image
@@ -616,21 +705,8 @@
                 '5216', '1684', '8752', '1533', '3926'
             ];
 
-            // Function to fetch and display live 2D result
+            // Function to fetch and display live 2D result - FIXED VERSION
             const fetchLiveResult = async () => {
-                const now = new Date();
-                const hours = now.getHours();
-                const minutes = now.getMinutes();
-
-                // Check if the current time is within the static period
-                const isStaticTime = (hours >= 16 && minutes >= 30) || (hours < 11 || (hours === 11 && minutes < 30));
-
-                if (isStaticTime) {
-                    liveResultContent.style.display = 'block';
-                    liveResultSubText.textContent = 'Results are static from 4:30 PM until 11:30 AM the next day.';
-                    return;
-                }
-
                 const apiUrl = 'https://set-scraper-server.onrender.com/get_set_data';
 
                 try {
@@ -640,36 +716,39 @@
                     }
                     const data = await response.json();
                     
-                    if (data && data.live_result && data.set_result && data.value && data.time) {
+                    if (data && data.live_result !== undefined) {
                         updateLiveResultDisplay(data);
                     } else {
-                        updateLiveResultDisplay({
-                            live_result: 'N/A',
-                            set_result: '--',
-                            value: '--' ,
-                            time: '--'
-                        });
-                        liveResultSubText.textContent = 'Data not available';
+                        throw new Error('Invalid data format from API');
                     }
                 } catch (error) {
                     console.error('Error fetching live data:', error);
                     updateLiveResultDisplay({
                         live_result: 'N/A',
                         set_result: '--',
-                        value: '--'
+                        value: '--',
+                        time: '--'
                     });
-                    liveResultSubText.textContent = 'Error fetching data';
+                    liveResultSubText.textContent = '';
                 }
             };
             
             const updateLiveResultDisplay = (data) => {
-                document.getElementById("live-result-time").textContent = data.time || '--';
-
-                liveResultNumber.textContent = data.live_result;
-                setResultValue.textContent = data.set_result;
-                liveResultValueText.textContent = data.value;
+                // Update the DOM elements with the API data
+                liveResultNumber.textContent = data.live_result || '--';
+                setResultValue.textContent = data.set_result || '--';
+                liveResultValueText.textContent = data.value || '--';
+                liveResultTime.textContent = data.time || '--';
+                
                 liveResultContent.style.display = 'block';
                 liveResultSubText.textContent = '';
+                
+                // Check for matches and trigger celebration if found
+                if (data.live_result && data.live_result !== '--' && data.live_result !== 'N/A') {
+                    if (checkForMatches(data.live_result)) {
+                        createLiveResultCelebration();
+                    }
+                }
                 
                 const now = new Date();
                 const hours = now.getHours();
@@ -686,11 +765,10 @@
     }
             };
             
-            
-
-            // Fetch live result on page load and every second
-            fetchLiveResult();
-            setInterval(fetchLiveResult, 1000);
+            // Function to update history and calendar (placeholder)
+            function updateHistoryAndCalendar(type, result) {
+                console.log(`Updating ${type} result to: ${result}`);
+            }
 
             // Function to format the current date
             const formatDate = (date) => {
@@ -954,96 +1032,11 @@
             // Initial setup on page load
             updateCurrentDate();
             updateHistoryTable();
+            
+            // Fetch live result on page load and every 1 second (1000ms)
+            fetchLiveResult();
+            setInterval(fetchLiveResult, 1000);
         });
-
-
-           // Function to update numbers at 8 PM (Mon–Fri)
-const autoUpdateAt8PM = async () => {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const day = now.getDay(); // Sunday = 0, Monday = 1, ... Saturday = 6
-
-    // Run only at exactly 20:00 (8 PM) Monday–Friday
-    if (hours === 20 && minutes === 0 && day >= 1 && day <= 5) {
-        try {
-            // Fetch latest set data
-            const response = await fetch('https://set-scraper-server.onrender.com/get_set_data');
-            if (!response.ok) throw new Error("Failed to fetch set data");
-            const data = await response.json();
-
-            if (!data.set_result) return;
-
-            let setResult = data.set_result.replace(/,/g, ""); // Remove commas
-            let [integerPart, decimalPart] = setResult.split(".");
-
-            // --- Formula for ဝမ်းချိန် (One Chain) ---
-            if (decimalPart && decimalPart.length >= 2) {
-                let d1 = parseInt(decimalPart[decimalPart.length - 2]);
-                let d2 = parseInt(decimalPart[decimalPart.length - 1]);
-                let sum = d1 + d2;
-                let result1 = sum; 
-                let result2 = sum - 1;
-
-                document.querySelector('div[data-id="one-chain"]').textContent = `${result2}, ${result1}`;
-            }
-
-            // --- Formula for ရွှေကီး (Not Broken) ---
-            if (integerPart.length >= 2) {
-                let d1 = parseInt(integerPart[integerPart.length - 2]);
-                let d2 = parseInt(integerPart[integerPart.length - 1]);
-                let sum = d1 + d2;
-                let lastDigit = sum % 10;
-                let results = [lastDigit - 1, lastDigit, lastDigit + 1];
-                document.querySelector('div[data-id="not-broken"]').textContent = results.join(", ");
-            }
-
-            // --- Clear other sections (so you can update manually) ---
-            document.querySelector('div[data-id="mwe-ga-nan"]').textContent = "";
-            document.querySelector('div[data-id="one-kwet"]').textContent = "";
-            document.querySelector('div[data-id="shwe-pat-tee"]').textContent = "";
-            document.querySelector('div[data-id="punch"]').textContent = "";
-
-            // --- Update Date to Next Day (skip weekends) ---
-            let nextDate = new Date(now);
-            nextDate.setDate(now.getDate() + 1);
-            if (nextDate.getDay() === 6) nextDate.setDate(nextDate.getDate() + 2); // Saturday → Monday
-            if (nextDate.getDay() === 0) nextDate.setDate(nextDate.getDate() + 1); // Sunday → Monday
-
-            const formatDate = (date) => {
-                const day = String(date.getDate()).padStart(2, '0');
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const year = date.getFullYear();
-                return `${day}-${month}-${year}`;
-            };
-
-            document.getElementById('current-date').textContent =
-                `${formatDate(nextDate)} - ${nextDate.toLocaleDateString('en-US', { weekday: 'long' })}`;
-
-        } catch (error) {
-            console.error("Error in 8PM auto-update:", error);
-        }
-    }
-};
-
-// Run every minute to check time
-
-
-      
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
