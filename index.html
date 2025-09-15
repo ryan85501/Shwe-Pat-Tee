@@ -898,97 +898,88 @@
                 });
             };
 
-            // Function to perform the calculation and display the result
-            const calculateResult = () => {
-                // Only proceed if two digits and an operator are selected
-                if (selectedDigits.length < 2 || !operator) {
-                    return;
-                }
-                
-                // Get the values
-                const firstDigit = selectedDigits[0].value;
-                const secondDigit = selectedDigits[1].value;
-                
-                let result = 0;
-                let calculationSuccess = true;
+            // Calculator state variables
+let expression = "";     // full expression string, e.g. "3+2-3*5"
+let lastClickedRow = null;
 
-                switch (operator) {
-                    case '+': result = firstDigit + secondDigit; break;
-                    case '-': result = firstDigit - secondDigit; break;
-                    case '*': result = firstDigit * secondDigit; break;
-                    case '/': 
-                        if (secondDigit === 0) {
-                            result = 'Error'; // Handle division by zero
-                            calculationSuccess = false;
-                        } else {
-                            result = firstDigit / secondDigit;
-                        }
-                        break;
-                }
+// Function to show the result in the same place as before
+function showResult(result) {
+    const resultElement = document.createElement('div');
+    resultElement.className = 'result-group';
+    resultElement.innerHTML = `<span class="result-number">${result}</span>`;
 
-                // If the calculation was successful, get the last digit
-                if (calculationSuccess) {
-                    // Check if the result is a number before getting the last digit
-                    if (typeof result === 'number') {
-                        // Use Math.floor to get the integer part before getting the last digit
-                        result = Math.floor(Math.abs(result)) % 10;
-                    }
-                }
+    if (lastClickedRow) {
+        const containerRect = previousResultsContainer.getBoundingClientRect();
+        const rowRect = lastClickedRow.getBoundingClientRect();
+        const topOffset = rowRect.top - containerRect.top;
+        resultElement.style.top = `${topOffset}px`;
+    }
 
-                // Create the result element
-                const resultElement = document.createElement('div');
-                resultElement.className = 'result-group';
-                resultElement.innerHTML = `<span class="result-number">${result}</span>`;
-                
-                // Get the second selected row to position the result
-                const secondSelectedRow = selectedDigits[1].row;
-                const containerRect = previousResultsContainer.getBoundingClientRect();
-                const rowRect = secondSelectedRow.getBoundingClientRect();
-                
-                // Calculate the top position relative to the container
-                const topOffset = rowRect.top - containerRect.top;
-                
-                // Set the position and append to the container
-                resultElement.style.top = `${topOffset}px`;
-                previousResultsContainer.appendChild(resultElement);
-                
-                // Reset operator and selected digits for the next calculation
-                selectedDigits = [];
-                operator = null;
-            };
+    previousResultsContainer.appendChild(resultElement);
+}
 
-            // Function to clear all highlights and results
-            const clearCalculation = () => {
-                // Remove all highlights
-                document.querySelectorAll('.selected-digit').forEach(el => {
-                    el.classList.remove('selected-digit');
-                });
-                // Remove all result elements
-                document.querySelectorAll('.result-group').forEach(el => {
-                    el.remove();
-                });
-                selectedDigits = [];
-                operator = null;
-            };
+// Handle digit clicks
+function handleDigitClick(digit, row, span) {
+    expression += digit;
+    lastClickedRow = row;
 
-            // Event listener for the calculator buttons
-            calculatorButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const value = button.dataset.value;
-                    
-                    if (value === 'clear') {
-                        clearCalculation();
-                    } else if (value === '=') {
-                        calculateResult();
-                    } else if (value === 'back') {
-                        // Trigger the click event on the back-to-main button
-                        backToMainBtn.click();
-                    } else {
-                        // It's an operator
-                        operator = value;
-                    }
-                });
-            });
+    // Toggle selection styling
+    if (span.classList.contains("selected-digit")) {
+        span.classList.remove("selected-digit");
+    } else {
+        span.classList.add("selected-digit");
+    }
+}
+
+// Function to perform the calculation and display result
+function calculateExpression() {
+    if (!expression) return;
+
+    try {
+        // Evaluate safely: allow only numbers/operators
+        const safeExpr = expression.replace(/[^0-9+\-*/().]/g, "");
+        let result = eval(safeExpr);
+
+        // If result is number, take only last digit (like before)
+        if (typeof result === "number") {
+            result = Math.floor(Math.abs(result)) % 10;
+        }
+
+        showResult(result);
+    } catch (e) {
+        showResult("Error");
+    }
+
+    // Reset for next calculation
+    expression = "";
+    document.querySelectorAll(".selected-digit").forEach(el => el.classList.remove("selected-digit"));
+}
+
+// Function to clear all
+function clearCalculation() {
+    expression = "";
+    document.querySelectorAll(".selected-digit").forEach(el => el.classList.remove("selected-digit"));
+    document.querySelectorAll(".result-group").forEach(el => el.remove());
+}
+
+// Event listener for calculator buttons
+calculatorButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        const value = button.dataset.value;
+
+        if (value === "clear") {
+            clearCalculation();
+        } else if (value === "=") {
+            calculateExpression();
+        } else if (value === "back") {
+            backToMainBtn.click();
+        } else {
+            // operator
+            expression += value;
+        }
+    });
+});
+
             
             // This function is now called from the Android app after the ad finishes.
             window.showContentFromApp = (buttonId) => {
@@ -1040,6 +1031,7 @@
     </script>
 </body>
 </html>
+
 
 
 
