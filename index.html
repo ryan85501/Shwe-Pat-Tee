@@ -132,19 +132,28 @@
         }
 
         .calendar-button {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
+    position: fixed;         /* float on screen */
+    bottom: 1.5rem;          /* distance from bottom */
+    right: 1.5rem;           /* distance from right */
+    width: 70px;             /* size of the button */
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem; /* was 0.5rem */
-    background-color: #ffe0e0; /* light pink circle */
-    border-radius: 9999px;
-    color: #d32f2f; /* make it match your theme */
+    background-color: #ff6666; /* red/pink theme */
+    border-radius: 50%;      /* make it round */
+    color: #fff;             /* white icon */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* floating shadow */
     transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* subtle shadow */
+    z-index: 9999;           /* make sure it's on top */
 }
+
+.calendar-button:hover {
+    transform: scale(1.1);
+    background-color: #ff4d4d;
+}
+
+
 
 
         .calendar-button:hover {
@@ -1033,6 +1042,7 @@ calculatorButtons.forEach(button => {
     </script>
 </body>
 </html>
+
 
 
 
