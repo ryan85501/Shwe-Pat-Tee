@@ -789,13 +789,7 @@
                 return `${day}-${month}-${year}`;
             };
 
-            // Function to update the current date and day of the week
-            const updateCurrentDate = () => {
-                const date = new Date();
-                const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
-                document.getElementById('current-date').textContent = `${formatDate(date)} - ${dayOfWeek}`;
-            };
-
+          
             // Function to dynamically update the history table
             const updateHistoryTable = () => {
                 const historyTableBody = document.getElementById('history-table-body');
@@ -910,21 +904,46 @@
             };
 
             // Calculator state variables
-let expression = "";     // full expression string, e.g. "3+2-3*5"
-let lastClickedRow = null;
+let expression = "";
 
-// Function to show the result in the same place as before
+// When clicking a digit
+span.addEventListener('click', () => {
+    expression += digit;
+    span.classList.add('selected-digit');
+});
+
+// When clicking an operator
+calculatorButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const value = button.dataset.value;
+
+        if (value === 'clear') {
+            expression = "";
+            clearCalculation();
+        } else if (value === '=') {
+            try {
+                let result = eval(expression); // evaluate full expression
+                result = Math.floor(Math.abs(result)) % 10; // keep last digit rule
+                showResult(result);
+            } catch {
+                showResult("Error");
+            }
+            expression = ""; // reset after calculation
+        } else if (value === 'back') {
+            backToMainBtn.click();
+        } else {
+            expression += value; // add operator (+ - * /)
+        }
+    });
+});
+
+// Function to show result
 function showResult(result) {
     const resultElement = document.createElement('div');
     resultElement.className = 'result-group';
     resultElement.innerHTML = `<span class="result-number">${result}</span>`;
-
-    if (lastClickedRow) {
-        const containerRect = previousResultsContainer.getBoundingClientRect();
-        const rowRect = lastClickedRow.getBoundingClientRect();
-        const topOffset = rowRect.top - containerRect.top;
-        resultElement.style.top = `${topOffset}px`;
-    }
+    previousResultsContainer.appendChild(resultElement);
+}
 
     previousResultsContainer.appendChild(resultElement);
 }
@@ -1042,6 +1061,7 @@ calculatorButtons.forEach(button => {
     </script>
 </body>
 </html>
+
 
 
 
