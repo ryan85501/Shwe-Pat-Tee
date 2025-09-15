@@ -132,18 +132,20 @@
         }
 
         .calendar-button {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem;
-            background-color: transparent;
-            border-radius: 9999px;
-            color: #2c3e50;
-            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
-        }
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem; /* was 0.5rem */
+    background-color: #ffe0e0; /* light pink circle */
+    border-radius: 9999px;
+    color: #d32f2f; /* make it match your theme */
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* subtle shadow */
+}
+
 
         .calendar-button:hover {
             transform: scale(1.1);
@@ -436,7 +438,7 @@
     <div class="flex flex-col items-center w-full max-w-7xl mx-auto gap-4">
         
         <button id="calendar-btn" class="calendar-button">
-            <i class="far fa-calendar-alt text-2xl sm:text-3xl"></i>
+            <i class="far fa-calendar-alt text-4xl sm:text-5xl"></i>
         </button>
 
         <div id="lucky-numbers-view" class="w-full flex flex-col items-center gap-4">
@@ -1031,6 +1033,7 @@ calculatorButtons.forEach(button => {
     </script>
 </body>
 </html>
+
 
 
 
