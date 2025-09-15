@@ -132,29 +132,18 @@
         }
 
         .calendar-button {
-    position: fixed;
-    bottom: 6rem;          /* ⬅️ push it above the calculator bar */
-    right: 1.5rem;
-    width: 70px;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ff6666;
-    border-radius: 50%;
-    color: #fff;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
-    z-index: 9999;
-}
-
-.calendar-button:hover {
-    transform: scale(1.1);
-    background-color: #ff4d4d;
-}
-
-
-
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            background-color: transparent;
+            border-radius: 9999px;
+            color: #2c3e50;
+            transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        }
 
         .calendar-button:hover {
             transform: scale(1.1);
@@ -447,7 +436,7 @@
     <div class="flex flex-col items-center w-full max-w-7xl mx-auto gap-4">
         
         <button id="calendar-btn" class="calendar-button">
-            <i class="far fa-calendar-alt text-5xl"></i>
+            <i class="far fa-calendar-alt text-2xl sm:text-3xl"></i>
         </button>
 
         <div id="lucky-numbers-view" class="w-full flex flex-col items-center gap-4">
@@ -789,7 +778,13 @@
                 return `${day}-${month}-${year}`;
             };
 
-          
+            // Function to update the current date and day of the week
+            const updateCurrentDate = () => {
+                const date = new Date();
+                const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
+                document.getElementById('current-date').textContent = `${formatDate(date)} - ${dayOfWeek}`;
+            };
+
             // Function to dynamically update the history table
             const updateHistoryTable = () => {
                 const historyTableBody = document.getElementById('history-table-body');
@@ -903,82 +898,97 @@
                 });
             };
 
-           // === Calculator: Full Expression Mode ===
-let expression = "";
+            // Function to perform the calculation and display the result
+            const calculateResult = () => {
+                // Only proceed if two digits and an operator are selected
+                if (selectedDigits.length < 2 || !operator) {
+                    return;
+                }
+                
+                // Get the values
+                const firstDigit = selectedDigits[0].value;
+                const secondDigit = selectedDigits[1].value;
+                
+                let result = 0;
+                let calculationSuccess = true;
 
-// Handle digit clicks
-function handleDigitClick(digit, row, span) {
-    expression += digit;
+                switch (operator) {
+                    case '+': result = firstDigit + secondDigit; break;
+                    case '-': result = firstDigit - secondDigit; break;
+                    case '*': result = firstDigit * secondDigit; break;
+                    case '/': 
+                        if (secondDigit === 0) {
+                            result = 'Error'; // Handle division by zero
+                            calculationSuccess = false;
+                        } else {
+                            result = firstDigit / secondDigit;
+                        }
+                        break;
+                }
 
-    // Highlight selected digits
-    if (span.classList.contains("selected-digit")) {
-        span.classList.remove("selected-digit");
-    } else {
-        span.classList.add("selected-digit");
-    }
-}
+                // If the calculation was successful, get the last digit
+                if (calculationSuccess) {
+                    // Check if the result is a number before getting the last digit
+                    if (typeof result === 'number') {
+                        // Use Math.floor to get the integer part before getting the last digit
+                        result = Math.floor(Math.abs(result)) % 10;
+                    }
+                }
 
-// Handle operator buttons (+ - * /)
-function handleOperator(value) {
-    expression += value;
-}
+                // Create the result element
+                const resultElement = document.createElement('div');
+                resultElement.className = 'result-group';
+                resultElement.innerHTML = `<span class="result-number">${result}</span>`;
+                
+                // Get the second selected row to position the result
+                const secondSelectedRow = selectedDigits[1].row;
+                const containerRect = previousResultsContainer.getBoundingClientRect();
+                const rowRect = secondSelectedRow.getBoundingClientRect();
+                
+                // Calculate the top position relative to the container
+                const topOffset = rowRect.top - containerRect.top;
+                
+                // Set the position and append to the container
+                resultElement.style.top = `${topOffset}px`;
+                previousResultsContainer.appendChild(resultElement);
+                
+                // Reset operator and selected digits for the next calculation
+                selectedDigits = [];
+                operator = null;
+            };
 
-// Perform calculation
-function calculateExpression() {
-    if (!expression) return;
+            // Function to clear all highlights and results
+            const clearCalculation = () => {
+                // Remove all highlights
+                document.querySelectorAll('.selected-digit').forEach(el => {
+                    el.classList.remove('selected-digit');
+                });
+                // Remove all result elements
+                document.querySelectorAll('.result-group').forEach(el => {
+                    el.remove();
+                });
+                selectedDigits = [];
+                operator = null;
+            };
 
-    try {
-        // Evaluate safely
-        const safeExpr = expression.replace(/[^0-9+\-*/().]/g, "");
-        let result = eval(safeExpr);
-
-        // Keep only last digit
-        if (typeof result === "number") {
-            result = Math.floor(Math.abs(result)) % 10;
-        }
-
-        showResult(result);
-    } catch {
-        showResult("Error");
-    }
-
-    // Reset
-    expression = "";
-    document.querySelectorAll(".selected-digit").forEach(el => el.classList.remove("selected-digit"));
-}
-
-// Show result in calendar view
-function showResult(result) {
-    const resultElement = document.createElement("div");
-    resultElement.className = "result-group";
-    resultElement.innerHTML = `<span class="result-number">${result}</span>`;
-    previousResultsContainer.appendChild(resultElement);
-}
-
-// Clear everything
-function clearCalculation() {
-    expression = "";
-    document.querySelectorAll(".selected-digit").forEach(el => el.classList.remove("selected-digit"));
-    document.querySelectorAll(".result-group").forEach(el => el.remove());
-}
-
-// Hook up calculator buttons
-calculatorButtons.forEach(button => {
-    button.addEventListener("click", () => {
-        const value = button.dataset.value;
-
-        if (value === "clear") {
-            clearCalculation();
-        } else if (value === "=") {
-            calculateExpression();
-        } else if (value === "back") {
-            backToMainBtn.click();
-        } else {
-            handleOperator(value);
-        }
-    });
-});
-
+            // Event listener for the calculator buttons
+            calculatorButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const value = button.dataset.value;
+                    
+                    if (value === 'clear') {
+                        clearCalculation();
+                    } else if (value === '=') {
+                        calculateResult();
+                    } else if (value === 'back') {
+                        // Trigger the click event on the back-to-main button
+                        backToMainBtn.click();
+                    } else {
+                        // It's an operator
+                        operator = value;
+                    }
+                });
+            });
             
             // This function is now called from the Android app after the ad finishes.
             window.showContentFromApp = (buttonId) => {
@@ -1030,14 +1040,6 @@ calculatorButtons.forEach(button => {
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
 
 
 
