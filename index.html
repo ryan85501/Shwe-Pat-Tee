@@ -442,7 +442,7 @@
         <div id="lucky-numbers-view" class="w-full flex flex-col items-center gap-4">
             
             <div class="text-center mb-4">
-                <div class="text-3xl font-bold mb-2">Date - <span id="16-09-2025"></span></div>
+                <div class="text-3xl font-bold mb-2">Date - <span id="current-date"></span></div>
                 <div class="text-xl font-medium text-gray-600">All DAY</div>
             </div>
 
@@ -901,7 +901,7 @@
             // Function to perform the calculation and display the result
             const calculateResult = () => {
                 // Only proceed if two digits and an operator are selected
-                if (selectedDigits.length < 4 || !operator) {
+                if (selectedDigits.length < 2 || !operator) {
                     return;
                 }
                 
@@ -1040,6 +1040,7 @@
     </script>
 </body>
 </html>
+
 
 
 
