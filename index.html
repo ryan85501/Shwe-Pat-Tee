@@ -903,57 +903,14 @@
                 });
             };
 
-            // Calculator state variables
+           // === Calculator: Full Expression Mode ===
 let expression = "";
-
-// When clicking a digit
-span.addEventListener('click', () => {
-    expression += digit;
-    span.classList.add('selected-digit');
-});
-
-// When clicking an operator
-calculatorButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const value = button.dataset.value;
-
-        if (value === 'clear') {
-            expression = "";
-            clearCalculation();
-        } else if (value === '=') {
-            try {
-                let result = eval(expression); // evaluate full expression
-                result = Math.floor(Math.abs(result)) % 10; // keep last digit rule
-                showResult(result);
-            } catch {
-                showResult("Error");
-            }
-            expression = ""; // reset after calculation
-        } else if (value === 'back') {
-            backToMainBtn.click();
-        } else {
-            expression += value; // add operator (+ - * /)
-        }
-    });
-});
-
-// Function to show result
-function showResult(result) {
-    const resultElement = document.createElement('div');
-    resultElement.className = 'result-group';
-    resultElement.innerHTML = `<span class="result-number">${result}</span>`;
-    previousResultsContainer.appendChild(resultElement);
-}
-
-    previousResultsContainer.appendChild(resultElement);
-}
 
 // Handle digit clicks
 function handleDigitClick(digit, row, span) {
     expression += digit;
-    lastClickedRow = row;
 
-    // Toggle selection styling
+    // Highlight selected digits
     if (span.classList.contains("selected-digit")) {
         span.classList.remove("selected-digit");
     } else {
@@ -961,38 +918,51 @@ function handleDigitClick(digit, row, span) {
     }
 }
 
-// Function to perform the calculation and display result
+// Handle operator buttons (+ - * /)
+function handleOperator(value) {
+    expression += value;
+}
+
+// Perform calculation
 function calculateExpression() {
     if (!expression) return;
 
     try {
-        // Evaluate safely: allow only numbers/operators
+        // Evaluate safely
         const safeExpr = expression.replace(/[^0-9+\-*/().]/g, "");
         let result = eval(safeExpr);
 
-        // If result is number, take only last digit (like before)
+        // Keep only last digit
         if (typeof result === "number") {
             result = Math.floor(Math.abs(result)) % 10;
         }
 
         showResult(result);
-    } catch (e) {
+    } catch {
         showResult("Error");
     }
 
-    // Reset for next calculation
+    // Reset
     expression = "";
     document.querySelectorAll(".selected-digit").forEach(el => el.classList.remove("selected-digit"));
 }
 
-// Function to clear all
+// Show result in calendar view
+function showResult(result) {
+    const resultElement = document.createElement("div");
+    resultElement.className = "result-group";
+    resultElement.innerHTML = `<span class="result-number">${result}</span>`;
+    previousResultsContainer.appendChild(resultElement);
+}
+
+// Clear everything
 function clearCalculation() {
     expression = "";
     document.querySelectorAll(".selected-digit").forEach(el => el.classList.remove("selected-digit"));
     document.querySelectorAll(".result-group").forEach(el => el.remove());
 }
 
-// Event listener for calculator buttons
+// Hook up calculator buttons
 calculatorButtons.forEach(button => {
     button.addEventListener("click", () => {
         const value = button.dataset.value;
@@ -1004,8 +974,7 @@ calculatorButtons.forEach(button => {
         } else if (value === "back") {
             backToMainBtn.click();
         } else {
-            // operator
-            expression += value;
+            handleOperator(value);
         }
     });
 });
@@ -1061,6 +1030,7 @@ calculatorButtons.forEach(button => {
     </script>
 </body>
 </html>
+
 
 
 
