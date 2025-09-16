@@ -787,18 +787,18 @@
             };
 
            // Function to dynamically update the history table
-const updateHistoryTable = () => {
-    const historyTableBody = document.getElementById('history-table-body');
-    historyTableBody.innerHTML = ''; // Clear existing rows
+               const updateHistoryTable = () => {
+               const historyTableBody = document.getElementById('history-table-body');
+                 historyTableBody.innerHTML = ''; // Clear existing rows
     
-    history.forEach(entry => {
-        const row = document.createElement('tr');
-        let amContent = entry.am;
-        let pmContent = entry.pm;
-        let rowClasses = '';
+                 history.forEach(entry => {
+              const row = document.createElement('tr');
+             let amContent = entry.am;
+             let pmContent = entry.pm;
+             let rowClasses = '';
 
         // Check if the entry should be highlighted
-        if (entry.highlight) {
+            if (entry.highlight) {
             rowClasses = 'highlighted-row';
 
             // Highlight specific digits based on the winning number for AM
@@ -810,7 +810,7 @@ const updateHistoryTable = () => {
             if (pmContent === '26') {
                 pmContent = `<span class="shining-digit">26</span>`;
             } 
-            if (pmContent === '74') {
+            else if (pmContent === '74') {
                 pmContent = `<span class="shining-digit">74</span>`;
             }
         }
@@ -1052,6 +1052,7 @@ const updateHistoryTable = () => {
     </script>
 </body>
 </html>
+
 
 
 
