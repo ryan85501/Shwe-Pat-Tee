@@ -1,15 +1,16 @@
 <!DOCTYPE html>
+
 <html lang="my">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucky Numbers - Focused Celebration Effects</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lucky Numbers - Focused Celebration Effects</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<style>
         /* Your original CSS remains unchanged */
         body {
             font-family: 'Inter', sans-serif;
@@ -432,158 +433,136 @@
     </style>
 </head>
 <body class="p-4 sm:p-8 relative">
-
-    <div class="flex flex-col items-center w-full max-w-7xl mx-auto gap-4">
-        
-        <button id="calendar-btn" class="calendar-button">
-            <i class="far fa-calendar-alt text-5xl sm:text-7xl"></i>
-        </button>
-
-        <div id="lucky-numbers-view" class="w-full flex flex-col items-center gap-4">
-            
-            <div class="text-center mb-4">
-                <div class="text-3xl font-bold mb-2">Date - <span id="current-date"></span></div>
-                <div class="text-xl font-medium text-gray-600">All DAY</div>
-            </div>
-
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full">
-                <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="mwe-ga-nan">
-                    <span class="text-3xl">🍀</span>
-                    <span class="text-base font-bold mt-1">မွေးဂဏန်း</span>
-                </button>
-                <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="one-kwet">
-                    <span class="text-3xl">🎯</span>
-                    <span class="text-base font-bold mt-1">တစ်ကွက်ကောင်း</span>
-                </button>
-                <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="shwe-pat-tee">
-                    <span class="text-3xl">💰</span>
-                    <span class="text-base font-bold mt-1">ရွှေပတ်သီး</span>
-                </button>
-                <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="not-broken">
-                    <span class="text-3xl">🔑</span>
-                    <span class="text-base font-bold mt-1">ရွှေကီး</span>
-                </button>
-                <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="one-chain">
-                    <span class="text-3xl">⛓️</span>
-                    <span class="text-base font-bold mt-1">ဝမ်းချိန်း</span>
-                </button>
-                <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="punch">
-                    <span class="text-3xl">💥</span>
-                    <span class="text-base font-bold mt-1">ထိုးကွက်</span>
-                </button>
-            </div>
-
-            <div id="numbers-display" class="numbers-container">
-                <div id="numbers-content" class="sub-numbers">
-                    </div>
-            </div>
-
-            <div id="number-data" class="hidden">
-                <div data-id="mwe-ga-nan">05, 27, 83, 16, 49</div>
-                <div data-id="one-kwet">61</div>
-                <div data-id="shwe-pat-tee">6</div>
-                <div data-id="not-broken">5, 6, 7</div>
-                <div data-id="one-chain">0, 1</div>
-                <div data-id="punch">50, 70, 96, 60 ,79, 71, 59, 51 </div>
-            </div> 
-
-            <!-- API Status Indicator (hidden) -->
-            <div id="api-status" class="api-status" style="display: none;"></div>
-            
-            <div id="live-result" class="live-result-container">
-                <!-- Celebration container for emojis -->
-                <div id="celebration-container" class="live-celebration"></div>
-                
-                <div class="live-result-header">
-                    <div class="live-result-title">2D Live Result</div>
-                    <i class="fas fa-heart cute-icon"></i>
-                </div>
-                <div id="live-result-content">
-                    <div id="live-result-number" class="live-result-number">--</div>
-
-                    <div class="live-result-detail-item">
-               <span class="live-result-detail-label">TIME</span>
-               <span id="live-result-time" class="live-result-detail-value">--</span>
-               </div>
-                    <div class="live-result-details">
-                        <div class="live-result-detail-item">
-                            <span class="live-result-detail-label">SET</span>
-                            <span id="set-result-value" class="live-result-detail-value">--</span>
-                        </div>
-                        <div class="live-result-detail-item">
-                            <span class="live-result-detail-label">VALUE</span>
-                            <span id="live-result-value-text" class="live-result-detail-value">--</span>
-                        </div>
-                    </div>
-                </div>
-                <div id="live-result-sub-text" class="live-result-sub-text">Loading...</div>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-md w-full mt-8">
-                <div class="text-2xl font-bold mb-4 text-center text-gray-800">2D Results History</div>
-                <div class="overflow-x-auto">
-                    <table id="history-table" class="w-full text-center border-collapse">
-                        <thead>
-                            <tr class="text-gray-500 text-sm">
-                                <th class="py-2">Date</th>
-                                <th class="py-2">AM</th>
-                                <th class="py-2">PM</th>
-                            </tr>
-                        </thead>
-                        <tbody id="history-table-body" class="text-lg font-medium text-gray-700">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-        
-        
-        
-        <div class="social-buttons-container flex flex-row gap-6 justify-center items-center">
-
-              <a href="https://www.youtube.com/@2dshwepattee?si=KYIfOzw5lLajvCvE" target="_blank" onclick="openExternalUrl(this.href); return false;" class="social-button text-red-600" rel="noopener noreferrer">
-                    <i class="fab fa-youtube social-icon"></i>
-                    <span class="text-red-600 mt-1">YouTube Channel</span>
-                </a>
-
-                <a href="https://www.facebook.com/share/1QxT8tKtjh/" target="_blank" onclick="openExternalUrl(this.href); return false;" class="social-button text-blue-600" rel="noopener noreferrer">
-                    <i class="fab fa-facebook social-icon"></i>
-                    <span class="text-blue-700 mt-1">Facebook Page</span>
-                </a>
-            </div>
-         <div class="mt-4 text-center">
-                <p class="text-xl font-semibold text-red-800 popping-text">Wave Account - 09777662003</p>
-            </div>
-            </div>
-
-        
-        <div id="calendar-view" class="w-full h-full flex flex-col items-center md:p-8 bg-white rounded-xl shadow-md gap-8" style="display: none;">
-            
-            <div class="w-full flex flex-col items-center">
-                <h2 class="text-3xl font-bold mb-4 text-center">Previous Results</h2>
-                <p class="text-gray-600 mb-4 text-center">Tap two digits and an operator to calculate the sum.</p>
-                <div id="previous-results-container" class="results-container w-full p-4 border rounded-lg">
-                    </div>
-                
-                <div class="flex justify-center gap-4 mt-4">
-                    <button id="back-to-main-btn" class="flex items-center justify-center gap-2 py-2 px-4 bg-gray-500 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-gray-600 transition-colors duration-300">
-                        <i class="fas fa-arrow-left"></i>
+<div class="flex flex-col items-center w-full max-w-7xl mx-auto gap-4">
+<button class="calendar-button" id="calendar-btn">
+<i class="far fa-calendar-alt text-5xl sm:text-7xl"></i>
+</button>
+<div class="w-full flex flex-col items-center gap-4" id="lucky-numbers-view">
+<div class="text-center mb-4">
+<div class="text-3xl font-bold mb-2">Date - <span id="current-date">19-09-2025 - Friday</span></div>
+<div class="text-xl font-medium text-gray-600">All DAY</div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full">
+<button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="mwe-ga-nan">
+<span class="text-3xl">🍀</span>
+<span class="text-base font-bold mt-1">မွေးဂဏန်း</span>
+</button>
+<button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="one-kwet">
+<span class="text-3xl">🎯</span>
+<span class="text-base font-bold mt-1">တစ်ကွက်ကောင်း</span>
+</button>
+<button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="shwe-pat-tee">
+<span class="text-3xl">💰</span>
+<span class="text-base font-bold mt-1">ရွှေပတ်သီး</span>
+</button>
+<button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="not-broken">
+<span class="text-3xl">🔑</span>
+<span class="text-base font-bold mt-1">ရွှေကီး</span>
+</button>
+<button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="one-chain">
+<span class="text-3xl">⛓️</span>
+<span class="text-base font-bold mt-1">ဝမ်းချိန်း</span>
+</button>
+<button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="punch">
+<span class="text-3xl">💥</span>
+<span class="text-base font-bold mt-1">ထိုးကွက်</span>
+</button>
+</div>
+<div class="numbers-container" id="numbers-display">
+<div class="sub-numbers" id="numbers-content">
+</div>
+</div>
+<div class="hidden" id="number-data">
+<div data-id="mwe-ga-nan">05, 27, 83, 16, 49</div>
+<div data-id="one-kwet">61</div>
+<div data-id="shwe-pat-tee">6</div>
+<div data-id="not-broken">5, 6, 7</div>
+<div data-id="one-chain">0, 1</div>
+<div data-id="punch">50, 70, 96, 60 ,79, 71, 59, 51 </div>
+</div>
+<!-- API Status Indicator (hidden) -->
+<div class="api-status" id="api-status" style="display: none;"></div>
+<div class="live-result-container" id="live-result">
+<!-- Celebration container for emojis -->
+<div class="live-celebration" id="celebration-container"></div>
+<div class="live-result-header">
+<div class="live-result-title">2D Live Result</div>
+<i class="fas fa-heart cute-icon"></i>
+</div>
+<div id="live-result-content">
+<div class="live-result-number" id="live-result-number">--</div>
+<div class="live-result-detail-item">
+<span class="live-result-detail-label">TIME</span>
+<span class="live-result-detail-value" id="live-result-time">--</span>
+</div>
+<div class="live-result-details">
+<div class="live-result-detail-item">
+<span class="live-result-detail-label">SET</span>
+<span class="live-result-detail-value" id="set-result-value">--</span>
+</div>
+<div class="live-result-detail-item">
+<span class="live-result-detail-label">VALUE</span>
+<span class="live-result-detail-value" id="live-result-value-text">--</span>
+</div>
+</div>
+</div>
+<div class="live-result-sub-text" id="live-result-sub-text">Loading...</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-md w-full mt-8">
+<div class="text-2xl font-bold mb-4 text-center text-gray-800">2D Results History</div>
+<div class="overflow-x-auto">
+<table class="w-full text-center border-collapse" id="history-table">
+<thead>
+<tr class="text-gray-500 text-sm">
+<th class="py-2">Date</th>
+<th class="py-2">AM</th>
+<th class="py-2">PM</th>
+</tr>
+</thead>
+<tbody class="text-lg font-medium text-gray-700" id="history-table-body">
+</tbody>
+</table>
+</div>
+</div>
+<div class="social-buttons-container flex flex-row gap-6 justify-center items-center">
+<a class="social-button text-red-600" href="https://www.youtube.com/@2dshwepattee?si=KYIfOzw5lLajvCvE" onclick="openExternalUrl(this.href); return false;" rel="noopener noreferrer" target="_blank">
+<i class="fab fa-youtube social-icon"></i>
+<span class="text-red-600 mt-1">YouTube Channel</span>
+</a>
+<a class="social-button text-blue-600" href="https://www.facebook.com/share/1QxT8tKtjh/" onclick="openExternalUrl(this.href); return false;" rel="noopener noreferrer" target="_blank">
+<i class="fab fa-facebook social-icon"></i>
+<span class="text-blue-700 mt-1">Facebook Page</span>
+</a>
+</div>
+<div class="mt-4 text-center">
+<p class="text-xl font-semibold text-red-800 popping-text">Wave Account - 09777662003</p>
+</div>
+</div>
+<div class="w-full h-full flex flex-col items-center md:p-8 bg-white rounded-xl shadow-md gap-8" id="calendar-view" style="display: none;">
+<div class="w-full flex flex-col items-center">
+<h2 class="text-3xl font-bold mb-4 text-center">Previous Results</h2>
+<p class="text-gray-600 mb-4 text-center">Tap two digits and an operator to calculate the sum.</p>
+<div class="results-container w-full p-4 border rounded-lg" id="previous-results-container">
+</div>
+<div class="flex justify-center gap-4 mt-4">
+<button class="flex items-center justify-center gap-2 py-2 px-4 bg-gray-500 text-white text-sm font-semibold rounded-lg shadow-md hover:bg-gray-600 transition-colors duration-300" id="back-to-main-btn">
+<i class="fas fa-arrow-left"></i>
                         Back to Main
                     </button>
-                </div>
-            </div>
-        </div>
-        
-        <div id="calculator-panel" class="calculator-buttons-container" style="display: none;">
-            <button class="cute-button button-plus" data-value="+"><i class="fas fa-plus"></i></button>
-            <button class="cute-button button-minus" data-value="-"><i class="fas fa-minus"></i></button>
-            <button class="cute-button button-multiply" data-value="*"><i class="fas fa-times"></i></button>
-            <button class="cute-button button-divide" data-value="/"><i class="fas fa-divide"></i></button>
-            <button class="cute-button button-equals" data-value="=">=</button>
-            <button class="cute-button button-back" data-value="back"><i class="fas fa-arrow-left"></i></button>
-            <button class="cute-button button-clear" data-value="clear"><i class="fas fa-trash-alt"></i></button>
-        </div>
-    </div>
-    
-    <script>
+</div>
+</div>
+</div>
+<div class="calculator-buttons-container" id="calculator-panel" style="display: none;">
+<button class="cute-button button-plus" data-value="+"><i class="fas fa-plus"></i></button>
+<button class="cute-button button-minus" data-value="-"><i class="fas fa-minus"></i></button>
+<button class="cute-button button-multiply" data-value="*"><i class="fas fa-times"></i></button>
+<button class="cute-button button-divide" data-value="/"><i class="fas fa-divide"></i></button>
+<button class="cute-button button-equals" data-value="=">=</button>
+<button class="cute-button button-back" data-value="back"><i class="fas fa-arrow-left"></i></button>
+<button class="cute-button button-clear" data-value="clear"><i class="fas fa-trash-alt"></i></button>
+</div>
+</div>
+<script>
         // Function to handle opening external links
         function openExternalUrl(url) {
             if (typeof Android !== "undefined" && Android.openExternalLink) {
@@ -1047,19 +1026,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
