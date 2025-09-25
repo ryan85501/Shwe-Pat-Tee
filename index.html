@@ -439,7 +439,7 @@
 </button>
 <div class="w-full flex flex-col items-center gap-4" id="lucky-numbers-view">
 <div class="text-center mb-4">
-<div class="text-3xl font-bold mb-2">Date - <span id="current-date">25-09-2025 - Thursday</span></div>
+<div class="text-3xl font-bold mb-2">Date - <span id="current-date">26-09-2025 - Friday</span></div>
 <div class="text-xl font-medium text-gray-600">All DAY</div>
 </div>
 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full">
@@ -474,11 +474,11 @@
 </div>
 <div class="hidden" id="number-data">
 <div data-id="mwe-ga-nan">--, --, --, --, --</div>
-<div data-id="one-kwet">50</div>
-<div data-id="shwe-pat-tee">5</div>
-<div data-id="not-broken">4, 5, 6</div>
-<div data-id="one-chain">4, 5</div>
-<div data-id="punch">59, 52, 51, 60, 68, 69</div>
+<div data-id="one-kwet"></div>
+<div data-id="shwe-pat-tee"></div>
+<div data-id="not-broken">5, 6, 7</div>
+<div data-id="one-chain">7, 8</div>
+<div data-id="punch"></div>
 </div>
 <!-- API Status Indicator (hidden) -->
 <div class="api-status" id="api-status" style="display: none;"></div>
@@ -665,11 +665,12 @@
 
             // History data structure to store results.
             let history = [
+                { date: '18-09-2025', day: 'Thursday', am: '31', pm: '68' , highlight: true },
                 { date: '14-09-2025', day: 'Wednesday', am: '25', pm: '13'},
                 { date: '23-09-2025', day: 'Tuesday', am: '43', pm: '07' },
                 { date: '22-09-2025', day: 'Monday', am: '77', pm: '45' },
                 { date: '19-09-2025', day: 'Friday', am: '88', pm: '21' },
-                { date: '18-09-2025', day: 'Thursday', am: '65', pm: '19' , highlight: true },
+                
                 
                 
                
@@ -686,7 +687,7 @@
                 '2737', '0490', '7499', '1678', '0468', '7198', '7715',
                 '0172', '9065', '7886', '4784', '6717', '2253', '2607',
                 '5216', '1684', '8752', '1533', '3926', '0280', '8595',
-                '6598', '6519', '8821', '7745', '4307', '2513'
+                '6598', '6519', '8821', '7745', '4307', '2513', '3168'
             ];
 
             // Function to fetch and display live 2D result - FIXED VERSION
