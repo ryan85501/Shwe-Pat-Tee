@@ -990,14 +990,25 @@
                 }
             };
 
-            // Handle button clicks
+         // Define the IDs of the buttons that *require* a rewarded ad
+            const adRequiredButtons = ['shwe-pat-tee', 'punch'];
+            
+            // Handle button clicks with selective ad display
             blockButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const buttonId = button.dataset.target;
-                    if (typeof Android !== "undefined" && Android.triggerRewardAd) {
-                        Android.triggerRewardAd(buttonId);  // Pass buttonId to Kotlin
+                    
+                    // Check if the current button requires an ad
+                    if (adRequiredButtons.includes(buttonId)) {
+                        // If ad is required AND the Android function exists, trigger the ad
+                        if (typeof Android !== "undefined" && Android.triggerRewardAd) {
+                            Android.triggerRewardAd(buttonId);  // Pass buttonId to Kotlin
+                        } else {
+                            // Fallback for browser (show content directly if not in app)
+                            showContent(button);
+                        }
                     } else {
-                        // Fallback for browser
+                        // For all other buttons (Mway Ga Nan, 1 kwat kg, Key, One-Chain), show content directly
                         showContent(button);
                     }
                 });
