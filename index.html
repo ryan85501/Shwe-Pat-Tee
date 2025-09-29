@@ -449,7 +449,7 @@
 </button>
 <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="one-kwet">
 <span class="text-3xl">🎯</span>
-<span class="text-base font-bold mt-1">1 Kwat Kg</span>
+<span class="text-base font-bold mt-1">1 kwat kg</span>
 </button>
 <button class="button-block bg-pink-100 hover:bg-pink-200 text-orange-600 p-4 rounded-2xl shadow-md transition-all duration-300 transform hover:scale-105 active:scale-98" data-target="shwe-pat-tee">
 <span class="text-3xl">💰</span>
@@ -665,12 +665,11 @@
 
             // History data structure to store results.
             let history = [
-                { date: '19-09-2025', day: 'Friday', am: '25', pm: '13' },
                 { date: '25-09-2025', day: 'Thursday', am: '31', pm: '68' , highlight: true },
                 { date: '24-09-2025', day: 'Wednesday', am: '25', pm: '13'},
                 { date: '23-09-2025', day: 'Tuesday', am: '43', pm: '07' },
                 { date: '22-09-2025', day: 'Monday', am: '77', pm: '45' },
-                
+                { date: '19-09-2025', day: 'Friday', am: '88', pm: '21' },
                 
                 
                 
@@ -689,7 +688,6 @@
                 '0172', '9065', '7886', '4784', '6717', '2253', '2607',
                 '5216', '1684', '8752', '1533', '3926', '0280', '8595',
                 '6598', '6519', '8821', '7745', '4307', '2513', '3168'
-                '2513'
             ];
 
             // Function to fetch and display live 2D result - FIXED VERSION
@@ -992,25 +990,14 @@
                 }
             };
 
-         // Define the IDs of the buttons that *require* a rewarded ad
-            const adRequiredButtons = ['shwe-pat-tee', 'punch'];
-            
-            // Handle button clicks with selective ad display
+            // Handle button clicks
             blockButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const buttonId = button.dataset.target;
-                    
-                    // Check if the current button requires an ad
-                    if (adRequiredButtons.includes(buttonId)) {
-                        // If ad is required AND the Android function exists, trigger the ad
-                        if (typeof Android !== "undefined" && Android.triggerRewardAd) {
-                            Android.triggerRewardAd(buttonId);  // Pass buttonId to Kotlin
-                        } else {
-                            // Fallback for browser (show content directly if not in app)
-                            showContent(button);
-                        }
+                    if (typeof Android !== "undefined" && Android.triggerRewardAd) {
+                        Android.triggerRewardAd(buttonId);  // Pass buttonId to Kotlin
                     } else {
-                        // For all other buttons (Mway Ga Nan, 1 kwat kg, Key, One-Chain), show content directly
+                        // Fallback for browser
                         showContent(button);
                     }
                 });
