@@ -439,7 +439,7 @@
 </button>
 <div class="w-full flex flex-col items-center gap-4" id="lucky-numbers-view">
 <div class="text-center mb-4">
-<div class="text-3xl font-bold mb-2">Date - <span id="current-date">30-09-2025 - Friday</span></div>
+<div class="text-3xl font-bold mb-2">Date - <span id="current-date">03-10-2025 - Friday</span></div>
 <div class="text-xl font-medium text-gray-600">All DAY</div>
 </div>
 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full">
@@ -477,8 +477,8 @@
 <div data-id="one-kwet">27</div>
 <div data-id="shwe-pat-tee">7</div>
 <div data-id="not-broken">5, 6, 7</div>
-<div data-id="one-chain">6, 7</div>
-<div data-id="punch">71, 72, 73</div>
+<div data-id="one-chain">0, 1</div>
+<div data-id="punch">-</div>
 </div>
 <!-- API Status Indicator (hidden) -->
 <div class="api-status" id="api-status" style="display: none;"></div>
@@ -665,11 +665,13 @@
 
             // History data structure to store results.
             let history = [
+                { date: '25-09-2025', day: 'Thursday', am: '62', pm: '96' , highlight: true },
+                { date: '24-09-2025', day: 'Wednesday', am: '04', pm: '37'},
                 { date: '23-09-2025', day: 'Tuesday', am: '86', pm: '' },
                 { date: '29-09-2025', day: 'Monday', am: '44', pm: '70' },
                 { date: '26-09-2025', day: 'Friday', am: '60', pm: '45' },
-                { date: '25-09-2025', day: 'Thursday', am: '31', pm: '68' , highlight: true },
-                { date: '24-09-2025', day: 'Wednesday', am: '25', pm: '13'},
+               
+               
                 
                 
                 
@@ -691,7 +693,7 @@
                 '0172', '9065', '7886', '4784', '6717', '2253', '2607',
                 '5216', '1684', '8752', '1533', '3926', '0280', '8595',
                 '6598', '6519', '8821', '7745', '4307', '2513', '3168',
-                '6045', '4470'
+                '6045', '4470', '0437', '6296'
             ];
 
             // Function to fetch and display live 2D result - FIXED VERSION
