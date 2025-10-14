@@ -665,6 +665,7 @@
 
             // History data structure to store results.
             let history = [
+                { date: '14-10-2025', day: 'Tuesday', am: '23', pm: '' },
                 { date: '26-09-2025', day: 'Friday', am: '35', pm: '82' },
                 { date: '09-10-2025', day: 'Thursday', am: '45', pm: '95' , highlight: true },
                 { date: '08-10-2025', day: 'Wednesday', am: '58', pm: '26'},
@@ -695,7 +696,7 @@
                 '5216', '1684', '8752', '1533', '3926', '0280', '8595',
                 '6598', '6519', '8821', '7745', '4307', '2513', '3168',
                 '6045', '4470', '0437', '6296', '5519', '2940', '0547',
-                '5826', '4595', '3582'
+                '5826', '4595', '3582', '32'
             ];
 
             // Function to fetch and display live 2D result - FIXED VERSION
@@ -805,8 +806,8 @@
                             pmContent = `<span class="shining-digit">68</span>`;
                         }
 
-                        else if  (amContent === '65') {
-                            amContent = `6<span class="shining-digit">5</span>`;
+                        else if  (amContent === '23') {
+                            amContent = `2<span class="shining-digit">3</span>`;
                         }
                        
                     }
