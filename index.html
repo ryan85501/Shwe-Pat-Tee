@@ -473,7 +473,7 @@
 </div>
 </div>
 <div class="hidden" id="number-data">
-<div data-id="mwe-ga-nan">11, 33, 55, 77, 99, 12, 34, 56, 78, 90</div>
+<div data-id="mwe-ga-nan">https://raw.githubusercontent.com/ryan85501/Shwe-Pat-Tee/main/photo_2025-10-26_19-26-30.jpg</div>
 <div data-id="one-kwet">42</div>
 <div data-id="shwe-pat-tee">4</div>
 <div data-id="not-broken">1, 2, 3</div>
@@ -835,22 +835,34 @@
                     return;
                 }
 
-                // Split the text content into an array of numbers
-                const numbersText = numbersSourceElement.textContent;
-                const numbersArray = numbersText.split(',').map(s => s.trim());
+              if (targetId === 'mwe-ga-nan') {
+        // If the target is the family photo, display an image
+        const imageUrl = numbersSourceElement.textContent.trim();
+        const img = document.createElement('img');
+        
+        img.src = imageUrl;
+        img.alt = 'Weekly';
+        // Tailwind classes for styling (responsive and centered)
+        img.className = 'max-w-full h-auto rounded-lg shadow-xl mx-auto'; 
+        
+        numbersContent.appendChild(img);
+    } else {
+        // Original logic for displaying numbers for all other buttons
 
-                numbersContent.innerHTML = ''; // Clear existing content
-                
-                numbersArray.forEach(num => {
-                    const span = document.createElement('span');
-                    span.textContent = num;
-                    span.className = 'flashing-number px-2';
-                    numbersContent.appendChild(span);
-                });
+        const numbersText = numbersSourceElement.textContent;
+        const numbersArray = numbersText.split(',').map(s => s.trim());
 
-                numbersDisplayContainer.classList.add('active');
-            };
-            
+        numbersArray.forEach(num => {
+            const span = document.createElement('span');
+            span.textContent = num;
+            span.className = 'flashing-number px-2';
+            numbersContent.appendChild(span);
+        });
+    }
+    // *** MODIFICATION END ***
+    
+    numbersDisplayContainer.classList.add('active');
+};
             // Function to populate the calendar view with the previous results
             const populateCalendarView = () => {
                 previousResultsContainer.innerHTML = ''; // Clear existing content
